@@ -1,0 +1,85 @@
+name: Update LZC Desktop Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g., 1.6.2)"
+        required: true
+        type: string
+
+jobs:
+  update-cask:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download x64 DMG
+        run: |
+          curl -f -L -o /tmp/lzc-x64.dmg "https://dl.lazycat.cloud/client/desktop/stable/lzc-client-desktop_v${{ inputs.version }}_x64.dmg"
+          if [ ! -f /tmp/lzc-x64.dmg ]; then
+            echo "Failed to download x64 DMG"
+            exit 1
+          fi
+
+      - name: Download arm64 DMG
+        run: |
+          curl -f -L -o /tmp/lzc-arm64.dmg "https://dl.lazycat.cloud/client/desktop/stable/lzc-client-desktop_v${{ inputs.version }}_arm64.dmg"
+          if [ ! -f /tmp/lzc-arm64.dmg ]; then
+            echo "Failed to download arm64 DMG"
+            exit 1
+          fi
+
+      - name: Calculate checksums
+        id: checksums
+        run: |
+          # Verify DMG files exist and have reasonable size
+          if [ ! -s /tmp/lzc-x64.dmg ] || [ $(stat -c%s /tmp/lzc-x64.dmg) -lt 1000000 ]; then
+            echo "x64 DMG file is missing or too small"
+            exit 1
+          fi
+          if [ ! -s /tmp/lzc-arm64.dmg ] || [ $(stat -c%s /tmp/lzc-arm64.dmg) -lt 1000000 ]; then
+            echo "arm64 DMG file is missing or too small"
+            exit 1
+          fi
+
+          X64_SHA256=$(sha256sum /tmp/lzc-x64.dmg | awk '{print $1}')
+          ARM64_SHA256=$(sha256sum /tmp/lzc-arm64.dmg | awk '{print $1}')
+          echo "x64_sha256=$X64_SHA256" >> $GITHUB_OUTPUT
+          echo "arm64_sha256=$ARM64_SHA256" >> $GITHUB_OUTPUT
+          echo "x64 SHA256: $X64_SHA256"
+          echo "arm64 SHA256: $ARM64_SHA256"
+
+      - name: Update cask file
+        run: |
+          # Update version
+          sed -i "s/version \".*\"/version \"${{ inputs.version }}\"/" Casks/lzc-client-desktop.rb
+
+          # Update x64 sha256 (in on_intel block)
+          sed -i '/on_intel do/,/end/{s/sha256 ".*"/sha256 "${{ steps.checksums.outputs.x64_sha256 }}"/}' Casks/lzc-client-desktop.rb
+
+          # Update arm64 sha256 (in on_arm block)
+          sed -i '/on_arm do/,/end/{s/sha256 ".*"/sha256 "${{ steps.checksums.outputs.arm64_sha256 }}"/}' Casks/lzc-client-desktop.rb
+
+      - name: Show changes
+        run: |
+          git diff Casks/lzc-client-desktop.rb
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add Casks/lzc-client-desktop.rb
+
+          # Check if there are changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "Update LZC Desktop to version ${{ inputs.version }}"
+          git push
