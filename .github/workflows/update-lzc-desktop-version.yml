@@ -1,11 +1,15 @@
 name: Update LZC Desktop Version
 
 on:
+  # 每天 UTC 时间 02:00 (北京时间 10:00) 自动检查更新
+  schedule:
+    - cron: '0 2 * * *'
+  # 保留手动触发功能
   workflow_dispatch:
     inputs:
       version:
-        description: "Version number (e.g., 1.6.2)"
-        required: true
+        description: "Version number (e.g., 1.6.2). Leave empty to auto-detect latest version."
+        required: false
         type: string
 
 jobs:
@@ -18,23 +22,65 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download x64 DMG
+      - name: Get latest version and check for updates
+        id: version_check
         run: |
-          curl -f -L -o /tmp/lzc-x64.dmg "https://dl.lazycat.cloud/client/desktop/stable/lzc-client-desktop_v${{ inputs.version }}_x64.dmg"
+          # 获取当前 cask 中的版本
+          CURRENT_VERSION=$(grep 'version "' Casks/lzc-client-desktop.rb | sed 's/.*version "\(.*\)".*/\1/')
+          echo "Current version: $CURRENT_VERSION"
+
+          # 如果手动指定了版本，使用指定的版本
+          if [ -n "${{ inputs.version }}" ]; then
+            NEW_VERSION="${{ inputs.version }}"
+            echo "Using manually specified version: $NEW_VERSION"
+          else
+            # 从 API 获取最新版本
+            METADATA=$(curl -f -s "https://dl.lazycat.cloud/client/desktop/lzc-client-desktop_arm64.dmg.metadata.json")
+            if [ $? -ne 0 ]; then
+              echo "Failed to fetch metadata"
+              exit 1
+            fi
+
+            NEW_VERSION=$(echo "$METADATA" | grep -o '"buildVersion":"v[^"]*"' | sed 's/"buildVersion":"v\(.*\)"/\1/')
+            if [ -z "$NEW_VERSION" ]; then
+              echo "Failed to parse version from metadata"
+              exit 1
+            fi
+            echo "Latest available version: $NEW_VERSION"
+          fi
+
+          # 比较版本
+          if [ "$CURRENT_VERSION" = "$NEW_VERSION" ]; then
+            echo "No update needed. Current version ($CURRENT_VERSION) is up to date."
+            echo "should_update=false" >> $GITHUB_OUTPUT
+          else
+            echo "Update available: $CURRENT_VERSION -> $NEW_VERSION"
+            echo "should_update=true" >> $GITHUB_OUTPUT
+          fi
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Download x64 DMG
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          curl -f -L -o /tmp/lzc-x64.dmg "https://dl.lazycat.cloud/client/desktop/stable/lzc-client-desktop_v${{ steps.version_check.outputs.new_version }}_x64.dmg"
           if [ ! -f /tmp/lzc-x64.dmg ]; then
             echo "Failed to download x64 DMG"
             exit 1
           fi
 
       - name: Download arm64 DMG
+        if: steps.version_check.outputs.should_update == 'true'
         run: |
-          curl -f -L -o /tmp/lzc-arm64.dmg "https://dl.lazycat.cloud/client/desktop/stable/lzc-client-desktop_v${{ inputs.version }}_arm64.dmg"
+          curl -f -L -o /tmp/lzc-arm64.dmg "https://dl.lazycat.cloud/client/desktop/stable/lzc-client-desktop_v${{ steps.version_check.outputs.new_version }}_arm64.dmg"
           if [ ! -f /tmp/lzc-arm64.dmg ]; then
             echo "Failed to download arm64 DMG"
             exit 1
           fi
 
       - name: Calculate checksums
+        if: steps.version_check.outputs.should_update == 'true'
         id: checksums
         run: |
           # Verify DMG files exist and have reasonable size
@@ -55,9 +101,10 @@ jobs:
           echo "arm64 SHA256: $ARM64_SHA256"
 
       - name: Update cask file
+        if: steps.version_check.outputs.should_update == 'true'
         run: |
           # Update version
-          sed -i "s/version \".*\"/version \"${{ inputs.version }}\"/" Casks/lzc-client-desktop.rb
+          sed -i "s/version \".*\"/version \"${{ steps.version_check.outputs.new_version }}\"/" Casks/lzc-client-desktop.rb
 
           # Update x64 sha256 (in on_intel block)
           sed -i '/on_intel do/,/end/{s/sha256 ".*"/sha256 "${{ steps.checksums.outputs.x64_sha256 }}"/}' Casks/lzc-client-desktop.rb
@@ -66,10 +113,12 @@ jobs:
           sed -i '/on_arm do/,/end/{s/sha256 ".*"/sha256 "${{ steps.checksums.outputs.arm64_sha256 }}"/}' Casks/lzc-client-desktop.rb
 
       - name: Show changes
+        if: steps.version_check.outputs.should_update == 'true'
         run: |
           git diff Casks/lzc-client-desktop.rb
 
       - name: Commit and push changes
+        if: steps.version_check.outputs.should_update == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
@@ -81,5 +130,22 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Update LZC Desktop to version ${{ inputs.version }}"
+          git commit -m "chore: update LZC Desktop to version ${{ steps.version_check.outputs.new_version }}"
           git push
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Current Version**: ${{ steps.version_check.outputs.current_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Latest Version**: ${{ steps.version_check.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Update Required**: ${{ steps.version_check.outputs.should_update }}" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.version_check.outputs.should_update }}" = "true" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Successfully updated to version ${{ steps.version_check.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ No update needed. Already on the latest version." >> $GITHUB_STEP_SUMMARY
+          fi
