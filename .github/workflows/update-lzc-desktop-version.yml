@@ -1,16 +1,14 @@
 name: Update LZC Desktop Version
 
 on:
-  # 每天 UTC 时间 02:00 (北京时间 10:00) 自动检查更新
-  schedule:
-    - cron: '0 2 * * *'
-  # 保留手动触发功能
   workflow_dispatch:
     inputs:
       version:
         description: "Version number (e.g., 1.6.2). Leave empty to auto-detect latest version."
         required: false
         type: string
+  schedule:
+    - cron: "0 */12 * * *"
 
 jobs:
   update-cask:
