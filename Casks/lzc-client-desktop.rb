@@ -15,6 +15,14 @@ cask "lzc-client-desktop" do
   desc "LazyCat desktop client application"
   homepage "https://lazycat.cloud/"
 
+  livecheck do
+    arch_suffix = Hardware::CPU.intel? ? "x64" : "arm64"
+    url "https://dl.lazycat.cloud/client/desktop/lzc-client-desktop_#{arch_suffix}.dmg.metadata.json"
+    strategy :json do |json|
+      json["buildVersion"]&.delete_prefix("v")
+    end
+  end
+
   app "懒猫微服.app"
 
   zap trash: [
