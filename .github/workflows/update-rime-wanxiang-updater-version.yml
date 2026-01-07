@@ -1,0 +1,152 @@
+name: Update Rime Wanxiang Updater Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g., 0.5.6). Leave empty to auto-detect latest version."
+        required: false
+        type: string
+  schedule:
+    - cron: "0 */12 * * *"
+
+jobs:
+  update-formula:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get latest version and check for updates
+        id: version_check
+        run: |
+          # 获取当前 formula 中的版本
+          CURRENT_VERSION=$(grep 'version "' Formula/rime-wanxiang-updater.rb | sed 's/.*version "\(.*\)".*/\1/')
+          echo "Current version: $CURRENT_VERSION"
+
+          # 如果手动指定了版本，使用指定的版本
+          if [ -n "${{ inputs.version }}" ]; then
+            NEW_VERSION="${{ inputs.version }}"
+            echo "Using manually specified version: $NEW_VERSION"
+          else
+            # 从 GitHub API 获取最新版本
+            RELEASE_INFO=$(curl -f -s "https://api.github.com/repos/ca-x/rime-wanxiang-updater/releases/latest")
+            if [ $? -ne 0 ]; then
+              echo "Failed to fetch release info"
+              exit 1
+            fi
+
+            NEW_VERSION=$(echo "$RELEASE_INFO" | grep -o '"tag_name": *"v[^"]*"' | sed 's/"tag_name": *"v\(.*\)"/\1/')
+            if [ -z "$NEW_VERSION" ]; then
+              echo "Failed to parse version from release info"
+              exit 1
+            fi
+            echo "Latest available version: $NEW_VERSION"
+          fi
+
+          # 比较版本
+          if [ "$CURRENT_VERSION" = "$NEW_VERSION" ]; then
+            echo "No update needed. Current version ($CURRENT_VERSION) is up to date."
+            echo "should_update=false" >> $GITHUB_OUTPUT
+          else
+            echo "Update available: $CURRENT_VERSION -> $NEW_VERSION"
+            echo "should_update=true" >> $GITHUB_OUTPUT
+          fi
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Download darwin-amd64 binary
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          curl -f -L -o /tmp/rime-wanxiang-updater-darwin-amd64 "https://github.com/ca-x/rime-wanxiang-updater/releases/download/v${{ steps.version_check.outputs.new_version }}/rime-wanxiang-updater-darwin-amd64"
+          if [ ! -f /tmp/rime-wanxiang-updater-darwin-amd64 ]; then
+            echo "Failed to download darwin-amd64 binary"
+            exit 1
+          fi
+
+      - name: Download darwin-arm64 binary
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          curl -f -L -o /tmp/rime-wanxiang-updater-darwin-arm64 "https://github.com/ca-x/rime-wanxiang-updater/releases/download/v${{ steps.version_check.outputs.new_version }}/rime-wanxiang-updater-darwin-arm64"
+          if [ ! -f /tmp/rime-wanxiang-updater-darwin-arm64 ]; then
+            echo "Failed to download darwin-arm64 binary"
+            exit 1
+          fi
+
+      - name: Calculate checksums
+        if: steps.version_check.outputs.should_update == 'true'
+        id: checksums
+        run: |
+          # Verify binary files exist and have reasonable size
+          if [ ! -s /tmp/rime-wanxiang-updater-darwin-amd64 ] || [ $(stat -c%s /tmp/rime-wanxiang-updater-darwin-amd64) -lt 100000 ]; then
+            echo "darwin-amd64 binary is missing or too small"
+            exit 1
+          fi
+          if [ ! -s /tmp/rime-wanxiang-updater-darwin-arm64 ] || [ $(stat -c%s /tmp/rime-wanxiang-updater-darwin-arm64) -lt 100000 ]; then
+            echo "darwin-arm64 binary is missing or too small"
+            exit 1
+          fi
+
+          AMD64_SHA256=$(sha256sum /tmp/rime-wanxiang-updater-darwin-amd64 | awk '{print $1}')
+          ARM64_SHA256=$(sha256sum /tmp/rime-wanxiang-updater-darwin-arm64 | awk '{print $1}')
+          echo "amd64_sha256=$AMD64_SHA256" >> $GITHUB_OUTPUT
+          echo "arm64_sha256=$ARM64_SHA256" >> $GITHUB_OUTPUT
+          echo "darwin-amd64 SHA256: $AMD64_SHA256"
+          echo "darwin-arm64 SHA256: $ARM64_SHA256"
+
+      - name: Update formula file
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          # Update version
+          sed -i "s/version \".*\"/version \"${{ steps.version_check.outputs.new_version }}\"/" Formula/rime-wanxiang-updater.rb
+
+          # Update version in URLs
+          sed -i "s|/v[0-9.]*\/|/v${{ steps.version_check.outputs.new_version }}/|g" Formula/rime-wanxiang-updater.rb
+
+          # Update intel sha256
+          sed -i '/if Hardware::CPU.intel?/,/end/{s/sha256 ".*"/sha256 "${{ steps.checksums.outputs.amd64_sha256 }}"/}' Formula/rime-wanxiang-updater.rb
+
+          # Update arm sha256
+          sed -i '/if Hardware::CPU.arm?/,/if Hardware::CPU.intel?/{s/sha256 ".*"/sha256 "${{ steps.checksums.outputs.arm64_sha256 }}"/}' Formula/rime-wanxiang-updater.rb
+
+      - name: Show changes
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          git diff Formula/rime-wanxiang-updater.rb
+
+      - name: Commit and push changes
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add Formula/rime-wanxiang-updater.rb
+
+          # Check if there are changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "chore: update Rime Wanxiang Updater to version ${{ steps.version_check.outputs.new_version }}"
+          git push
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Current Version**: ${{ steps.version_check.outputs.current_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Latest Version**: ${{ steps.version_check.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Update Required**: ${{ steps.version_check.outputs.should_update }}" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.version_check.outputs.should_update }}" = "true" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Successfully updated to version ${{ steps.version_check.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ No update needed. Already on the latest version." >> $GITHUB_STEP_SUMMARY
+          fi
