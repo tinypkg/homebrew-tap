@@ -86,10 +86,10 @@ jobs:
         if: steps.version_check.outputs.should_update == 'true'
         run: |
           # Update version
-          sed -i "s/version \".*\"/version \"${{ steps.version_check.outputs.new_version }}\"/\" Casks/cc-switch.rb
+          sed -i "s/version \".*\"/version \"${{ steps.version_check.outputs.new_version }}\"/" Casks/cc-switch.rb
 
           # Update sha256
-          sed -i "s/sha256 \".*\"/sha256 \"${{ steps.checksum.outputs.sha256 }}\"/\" Casks/cc-switch.rb
+          sed -i "s/sha256 \".*\"/sha256 \"${{ steps.checksum.outputs.sha256 }}\"/" Casks/cc-switch.rb
 
       - name: Show changes
         if: steps.version_check.outputs.should_update == 'true'
