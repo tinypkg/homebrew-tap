@@ -9,15 +9,32 @@
 
 ## 📦 快速开始
 
-### 1️⃣ 添加 Tap
+### 🚀 一键安装（推荐）
+
+无需添加 tap，直接安装：
+
+```bash
+# 懒猫微服桌面客户端
+brew install --cask tinypkg/tap/lzc-client-desktop
+
+# CC Switch - Claude Code 配置管理工具
+brew install --cask tinypkg/tap/cc-switch
+
+# 万象拼音输入法更新工具
+brew install tinypkg/tap/rime-wanxiang-updater
+```
+
+### 📋 传统方式
+
+#### 1️⃣ 添加 Tap
 
 ```bash
 brew tap tinypkg/tap
 ```
 
-### 2️⃣ 安装软件
+#### 2️⃣ 安装软件
 
-#### GUI 应用 (Casks)
+**GUI 应用 (Casks)**
 
 ```bash
 # 懒猫微服桌面客户端
@@ -27,7 +44,7 @@ brew install --cask lzc-client-desktop
 brew install --cask cc-switch
 ```
 
-#### 命令行工具 (Formulas)
+**命令行工具 (Formulas)**
 
 ```bash
 # 万象拼音输入法更新工具
@@ -48,16 +65,16 @@ brew uninstall rime-wanxiang-updater
 
 ### 🖥️ GUI 应用 (Casks)
 
-| 软件名称 | 说明 | 安装命令 | 版本 | 架构支持 |
-|---------|------|---------|------|----------|
-| [lzc-client-desktop](Casks/lzc-client-desktop.rb) | 懒猫微服桌面客户端 | `brew install --cask lzc-client-desktop` | `1.6.7` | 🍎 Intel & ARM |
-| [cc-switch](Casks/cc-switch.rb) | Claude Code/Codex 配置管理器 | `brew install --cask cc-switch` | `3.8.3` | 🍎 Intel & ARM |
+| 软件名称 | 说明 | 一键安装命令 | 版本 | 架构支持 |
+|---------|------|-------------|------|----------|
+| [lzc-client-desktop](Casks/lzc-client-desktop.rb) | 懒猫微服桌面客户端 | `brew install --cask tinypkg/tap/lzc-client-desktop` | `1.6.7` | 🍎 Intel & ARM |
+| [cc-switch](Casks/cc-switch.rb) | Claude Code/Codex 配置管理器 | `brew install --cask tinypkg/tap/cc-switch` | `3.9.0` | 🍎 Intel & ARM |
 
 ### ⚙️ 命令行工具 (Formulas)
 
-| 软件名称 | 说明 | 安装命令 | 版本 | 架构支持 |
-|---------|------|---------|------|----------|
-| [rime-wanxiang-updater](Formula/rime-wanxiang-updater.rb) | 万象拼音输入法词库更新工具 | `brew install rime-wanxiang-updater` | `0.5.9` | 🍎 Intel & ARM |
+| 软件名称 | 说明 | 一键安装命令 | 版本 | 架构支持 |
+|---------|------|-------------|------|----------|
+| [rime-wanxiang-updater](Formula/rime-wanxiang-updater.rb) | 万象拼音输入法词库更新工具 | `brew install tinypkg/tap/rime-wanxiang-updater` | `0.5.9` | 🍎 Intel & ARM |
 
 ## ✨ 特性
 
