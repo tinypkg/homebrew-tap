@@ -16,6 +16,12 @@ cask "cc-switch" do
 
   app "CC Switch.app"
 
+  postflight do
+    system_command "/usr/bin/xattr",
+                   args: ["-cr", "#{appdir}/CC Switch.app"],
+                   sudo: false
+  end
+
   zap trash: [
     "~/.cc-switch",
     "~/Library/Application Support/com.ccswitch.desktop",
