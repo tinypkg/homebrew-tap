@@ -1,21 +1,21 @@
 class RimeWanxiangUpdater < Formula
   desc "Rime Wanxiang dictionary updater"
   homepage "https://github.com/ca-x/rime-wanxiang-updater"
-  version "0.6.0"
+  version "0.6.1"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/ca-x/rime-wanxiang-updater/releases/download/v0.6.0/rime-wanxiang-updater-darwin-arm64"
-      sha256 "951eab6647ccde6523d807e5d7e9230dd7ce3af753a1a2ad434b3b6c0932fedb"
+      url "https://github.com/ca-x/rime-wanxiang-updater/releases/download/v0.6.1/rime-wanxiang-updater-darwin-arm64"
+      sha256 "1dcdb2dd0a727563fd6d952d1f4d266b7f7c70923ff7e9c3fc3abfb934d9bf4e"
 
       def install
         bin.install "rime-wanxiang-updater-darwin-arm64" => "rime-wanxiang-updater"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/ca-x/rime-wanxiang-updater/releases/download/v0.6.0/rime-wanxiang-updater-darwin-amd64"
-      sha256 "9479e9c0c86e3ac18e4f500216f55bafb4c9da8b07eead0b04591125f0fc17ba"
+      url "https://github.com/ca-x/rime-wanxiang-updater/releases/download/v0.6.1/rime-wanxiang-updater-darwin-amd64"
+      sha256 "613c105eb490f495ae664eb64aafbe7f5ec3c85ae907b962b51edf1f2146ce8a"
 
       def install
         bin.install "rime-wanxiang-updater-darwin-amd64" => "rime-wanxiang-updater"
