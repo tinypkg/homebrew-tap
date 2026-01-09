@@ -39,7 +39,7 @@ jobs:
               exit 1
             fi
 
-            NEW_VERSION=$(echo "$METADATA" | grep -o '"buildVersion":"v[^"]*"' | sed 's/"buildVersion":"v\(.*\)"/\1/')
+            NEW_VERSION=$(echo "$METADATA" | sed -n 's/.*"buildVersion":"v\([^"]*\)".*/\1/p' | head -n 1)
             if [ -z "$NEW_VERSION" ]; then
               echo "Failed to parse version from metadata"
               exit 1

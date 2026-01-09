@@ -39,7 +39,7 @@ jobs:
               exit 1
             fi
 
-            NEW_VERSION=$(echo "$RELEASE_INFO" | grep -o '"tag_name": *"v[^"]*"' | sed 's/"tag_name": *"v\(.*\)"/\1/')
+            NEW_VERSION=$(echo "$RELEASE_INFO" | sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p' | head -n 1)
             if [ -z "$NEW_VERSION" ]; then
               echo "Failed to parse version from release info"
               exit 1
