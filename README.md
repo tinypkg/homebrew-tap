@@ -20,6 +20,15 @@ brew install --cask tinypkg/tap/lzc-client-desktop
 # CC Switch - Claude Code 配置管理工具
 brew install --cask tinypkg/tap/cc-switch
 
+# Fcitx5 输入法 - 拼音版
+brew install --cask tinypkg/tap/fcitx5-pinyin
+
+# Fcitx5 输入法 - 中州韵版
+brew install --cask tinypkg/tap/fcitx5-rime
+
+# Fcitx5 输入法 - 原装版
+brew install --cask tinypkg/tap/fcitx5
+
 # 万象拼音输入法更新工具
 brew install tinypkg/tap/rime-wanxiang-updater
 ```
@@ -42,6 +51,15 @@ brew install --cask lzc-client-desktop
 
 # CC Switch - Claude Code 配置管理工具
 brew install --cask cc-switch
+
+# Fcitx5 输入法 - 拼音版
+brew install --cask fcitx5-pinyin
+
+# Fcitx5 输入法 - 中州韵版
+brew install --cask fcitx5-rime
+
+# Fcitx5 输入法 - 原装版
+brew install --cask fcitx5
 ```
 
 **命令行工具 (Formulas)**
@@ -69,6 +87,9 @@ brew uninstall rime-wanxiang-updater
 |---------|------|-------------|------|----------|
 | [lzc-client-desktop](Casks/lzc-client-desktop.rb) | 懒猫微服桌面客户端 | `brew install --cask tinypkg/tap/lzc-client-desktop` | `1.6.7` | 🍎 Intel & ARM |
 | [cc-switch](Casks/cc-switch.rb) | Claude Code/Codex 配置管理器 | `brew install --cask tinypkg/tap/cc-switch` | `3.9.0` | 🍎 Intel & ARM |
+| [fcitx5-pinyin](Casks/fcitx5-pinyin.rb) | Fcitx5 输入法框架 - 拼音版 | `brew install --cask tinypkg/tap/fcitx5-pinyin` | `0.2.11` | 🍎 Intel & ARM |
+| [fcitx5-rime](Casks/fcitx5-rime.rb) | Fcitx5 输入法框架 - 中州韵版 | `brew install --cask tinypkg/tap/fcitx5-rime` | `0.2.11` | 🍎 Intel & ARM |
+| [fcitx5](Casks/fcitx5.rb) | Fcitx5 输入法框架 - 原装版 | `brew install --cask tinypkg/tap/fcitx5` | `0.2.11` | 🍎 Intel & ARM |
 
 ### ⚙️ 命令行工具 (Formulas)
 
@@ -92,6 +113,19 @@ brew uninstall rime-wanxiang-updater
 - **触发方式**: 每12小时定时检查 + 手动触发
 - **工作流**: `.github/workflows/update-cc-switch-version.yml`
 - **使用方法**: 在 GitHub Actions 页面手动触发，输入版本号
+
+### Fcitx5 自动更新
+- **触发方式**: 每周五12:00定时检查 + 手动触发
+- **工作流**: `.github/workflows/update-fcitx5-versions.yml`
+- **更新范围**: 同时更新所有三个版本（拼音版、中州韵版、原装版）
+- **使用方法**:
+  ```bash
+  # 手动指定版本
+  gh workflow run update-fcitx5-versions.yml -f version=0.2.11
+
+  # 自动检测最新版本
+  gh workflow run update-fcitx5-versions.yml
+  ```
 
 ### Rime Wanxiang Updater 自动更新
 - **触发方式**: 每12小时定时检查 + 手动触发（可自动检测最新版本）
