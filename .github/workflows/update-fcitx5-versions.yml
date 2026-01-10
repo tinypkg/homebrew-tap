@@ -1,0 +1,166 @@
+name: Update Fcitx5 Versions
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g., 0.2.11). Leave empty to auto-detect latest version."
+        required: false
+        type: string
+  schedule:
+    - cron: "0 */12 * * *"
+
+jobs:
+  update-casks:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get latest version and check for updates
+        id: version_check
+        run: |
+          # 获取当前 cask 中的版本（使用 fcitx5-pinyin 作为参考）
+          CURRENT_VERSION=$(grep 'version \"' Casks/fcitx5-pinyin.rb | sed 's/.*version \"\\(.*\\)\".*/\\1/')
+          echo "Current version: $CURRENT_VERSION"
+
+          # 如果手动指定了版本，使用指定的版本
+          if [ -n "${{ inputs.version }}" ]; then
+            NEW_VERSION="${{ inputs.version }}"
+            echo "Using manually specified version: $NEW_VERSION"
+          else
+            # 从 GitHub API 获取最新版本
+            RELEASE_INFO=$(curl -f -s "https://api.github.com/repos/fcitx-contrib/fcitx5-macos-installer/releases/latest")
+            if [ $? -ne 0 ]; then
+              echo "Failed to fetch release info"
+              exit 1
+            fi
+
+            NEW_VERSION=$(echo "$RELEASE_INFO" | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p' | head -n 1)
+            if [ -z "$NEW_VERSION" ]; then
+              echo "Failed to parse version from release info"
+              exit 1
+            fi
+            echo "Latest available version: $NEW_VERSION"
+          fi
+
+          # 比较版本
+          if [ "$CURRENT_VERSION" = "$NEW_VERSION" ]; then
+            echo "No update needed. Current version ($CURRENT_VERSION) is up to date."
+            echo "should_update=false" >> $GITHUB_OUTPUT
+          else
+            echo "Update available: $CURRENT_VERSION -> $NEW_VERSION"
+            echo "should_update=true" >> $GITHUB_OUTPUT
+          fi
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Download Fcitx5-Pinyin.zip
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          curl -f -L -o /tmp/Fcitx5-Pinyin.zip "https://github.com/fcitx-contrib/fcitx5-macos-installer/releases/download/${{ steps.version_check.outputs.new_version }}/Fcitx5-Pinyin.zip"
+          if [ ! -f /tmp/Fcitx5-Pinyin.zip ]; then
+            echo "Failed to download Fcitx5-Pinyin.zip"
+            exit 1
+          fi
+
+      - name: Download Fcitx5-Rime.zip
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          curl -f -L -o /tmp/Fcitx5-Rime.zip "https://github.com/fcitx-contrib/fcitx5-macos-installer/releases/download/${{ steps.version_check.outputs.new_version }}/Fcitx5-Rime.zip"
+          if [ ! -f /tmp/Fcitx5-Rime.zip ]; then
+            echo "Failed to download Fcitx5-Rime.zip"
+            exit 1
+          fi
+
+      - name: Download Fcitx5Installer.zip
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          curl -f -L -o /tmp/Fcitx5Installer.zip "https://github.com/fcitx-contrib/fcitx5-macos-installer/releases/download/${{ steps.version_check.outputs.new_version }}/Fcitx5Installer.zip"
+          if [ ! -f /tmp/Fcitx5Installer.zip ]; then
+            echo "Failed to download Fcitx5Installer.zip"
+            exit 1
+          fi
+
+      - name: Calculate checksums
+        if: steps.version_check.outputs.should_update == 'true'
+        id: checksums
+        run: |
+          # Verify files exist and have reasonable size
+          for file in /tmp/Fcitx5-Pinyin.zip /tmp/Fcitx5-Rime.zip /tmp/Fcitx5Installer.zip; do
+            if [ ! -s "$file" ] || [ $(stat -c%s "$file") -lt 100000 ]; then
+              echo "$file is missing or too small"
+              exit 1
+            fi
+          done
+
+          SHA256_PINYIN=$(sha256sum /tmp/Fcitx5-Pinyin.zip | awk '{print $1}')
+          SHA256_RIME=$(sha256sum /tmp/Fcitx5-Rime.zip | awk '{print $1}')
+          SHA256_INSTALLER=$(sha256sum /tmp/Fcitx5Installer.zip | awk '{print $1}')
+
+          echo "sha256_pinyin=$SHA256_PINYIN" >> $GITHUB_OUTPUT
+          echo "sha256_rime=$SHA256_RIME" >> $GITHUB_OUTPUT
+          echo "sha256_installer=$SHA256_INSTALLER" >> $GITHUB_OUTPUT
+
+          echo "SHA256 Pinyin: $SHA256_PINYIN"
+          echo "SHA256 Rime: $SHA256_RIME"
+          echo "SHA256 Installer: $SHA256_INSTALLER"
+
+      - name: Update cask files
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          # Update fcitx5-pinyin.rb
+          sed -i "s/version \".*\"/version \"${{ steps.version_check.outputs.new_version }}\"/" Casks/fcitx5-pinyin.rb
+          sed -i "s/sha256 \".*\"/sha256 \"${{ steps.checksums.outputs.sha256_pinyin }}\"/" Casks/fcitx5-pinyin.rb
+
+          # Update fcitx5-rime.rb
+          sed -i "s/version \".*\"/version \"${{ steps.version_check.outputs.new_version }}\"/" Casks/fcitx5-rime.rb
+          sed -i "s/sha256 \".*\"/sha256 \"${{ steps.checksums.outputs.sha256_rime }}\"/" Casks/fcitx5-rime.rb
+
+          # Update fcitx5.rb
+          sed -i "s/version \".*\"/version \"${{ steps.version_check.outputs.new_version }}\"/" Casks/fcitx5.rb
+          sed -i "s/sha256 \".*\"/sha256 \"${{ steps.checksums.outputs.sha256_installer }}\"/" Casks/fcitx5.rb
+
+      - name: Show changes
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          git diff Casks/fcitx5-pinyin.rb
+          git diff Casks/fcitx5-rime.rb
+          git diff Casks/fcitx5.rb
+
+      - name: Commit and push changes
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add Casks/fcitx5-pinyin.rb Casks/fcitx5-rime.rb Casks/fcitx5.rb
+
+          # Check if there are changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "chore: update Fcitx5 to version ${{ steps.version_check.outputs.new_version }}"
+          git push
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Current Version**: ${{ steps.version_check.outputs.current_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Latest Version**: ${{ steps.version_check.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Update Required**: ${{ steps.version_check.outputs.should_update }}" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.version_check.outputs.should_update }}" = "true" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ Successfully updated to version ${{ steps.version_check.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "ℹ️ No update needed. Already on the latest version." >> $GITHUB_STEP_SUMMARY
+          fi
