@@ -1,0 +1,58 @@
+name: Update Noi Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g., 1.1.0)"
+        required: true
+        type: string
+
+jobs:
+  update-cask:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get current version
+        id: version_check
+        run: |
+          CURRENT_VERSION=$(grep 'version "' Casks/noi.rb | sed 's/.*version "\(.*\)".*/\1/')
+          echo "Current version: $CURRENT_VERSION"
+          NEW_VERSION="${{ inputs.version }}"
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Download x64 DMG
+        run: |
+          curl -f -L -o /tmp/noi-x64.dmg "https://github.com/lencx/Noi/releases/download/v${{ steps.version_check.outputs.new_version }}/Noi-${{ steps.version_check.outputs.new_version }}-x64.dmg"
+
+      - name: Download arm64 DMG
+        run: |
+          curl -f -L -o /tmp/noi-arm64.dmg "https://github.com/lencx/Noi/releases/download/v${{ steps.version_check.outputs.new_version }}/Noi-${{ steps.version_check.outputs.new_version }}-arm64.dmg"
+
+      - name: Calculate checksums
+        id: checksums
+        run: |
+          X64_SHA256=$(sha256sum /tmp/noi-x64.dmg | awk '{print $1}')
+          ARM64_SHA256=$(sha256sum /tmp/noi-arm64.dmg | awk '{print $1}')
+          echo "x64_sha256=$X64_SHA256" >> $GITHUB_OUTPUT
+          echo "arm64_sha256=$ARM64_SHA256" >> $GITHUB_OUTPUT
+
+      - name: Update cask file
+        run: |
+          sed -i "s/version \".*\"/version \"${{ steps.version_check.outputs.new_version }}\"/" Casks/noi.rb
+          sed -i '/on_intel do/,/end/{s/sha256 ".*"/sha256 "${{ steps.checksums.outputs.x64_sha256 }}"/}' Casks/noi.rb
+          sed -i '/on_arm do/,/end/{s/sha256 ".*"/sha256 "${{ steps.checksums.outputs.arm64_sha256 }}"/}' Casks/noi.rb
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add Casks/noi.rb
+          git diff --cached --quiet || git commit -m "chore: update Noi to version ${{ steps.version_check.outputs.new_version }}"
+          git push
