@@ -32,11 +32,6 @@ brew install --cask tinypkg/tap/fcitx5
 # 万象拼音输入法更新工具
 brew install tinypkg/tap/rime-wanxiang-updater
 
-# MonoLisa 字体
-brew install --cask tinypkg/tap/font-monolisa
-
-# Berkeley Mono 字体
-brew install --cask tinypkg/tap/font-berkeley-mono
 ```
 
 ### 📋 传统方式
@@ -68,15 +63,6 @@ brew install --cask fcitx5-rime
 brew install --cask fcitx5
 ```
 
-**字体 (Fonts)**
-
-```bash
-# MonoLisa 字体
-brew install --cask font-monolisa
-
-# Berkeley Mono 字体
-brew install --cask font-berkeley-mono
-```
 
 **命令行工具 (Formulas)**
 
@@ -107,12 +93,6 @@ brew uninstall rime-wanxiang-updater
 | [fcitx5-rime](Casks/fcitx5-rime.rb) | Fcitx5 输入法框架 - 中州韵版 | `brew install --cask tinypkg/tap/fcitx5-rime` | `0.2.11` | 🍎 Intel & ARM |
 | [fcitx5](Casks/fcitx5.rb) | Fcitx5 输入法框架 - 原装版 | `brew install --cask tinypkg/tap/fcitx5` | `0.2.11` | 🍎 Intel & ARM |
 
-### 🔤 字体 (Fonts)
-
-| 软件名称 | 说明 | 一键安装命令 | 版本 | 架构支持 |
-|---------|------|-------------|------|----------|
-| [font-monolisa](Casks/font-monolisa.rb) | MonoLisa 等宽字体 | `brew install --cask tinypkg/tap/font-monolisa` | `2.016` | 🍎 Intel & ARM |
-| [font-berkeley-mono](Casks/font-berkeley-mono.rb) | Berkeley Mono 等宽字体 | `brew install --cask tinypkg/tap/font-berkeley-mono` | `2.002` | 🍎 Intel & ARM |
 
 ### ⚙️ 命令行工具 (Formulas)
 
