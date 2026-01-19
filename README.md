@@ -32,6 +32,9 @@ brew install --cask tinypkg/tap/fcitx5
 # 万象拼音输入法更新工具
 brew install tinypkg/tap/rime-wanxiang-updater
 
+# Noi - AI 工具集合
+brew install --cask tinypkg/tap/noi
+
 ```
 
 ### 📋 传统方式
@@ -61,6 +64,9 @@ brew install --cask fcitx5-rime
 
 # Fcitx5 输入法 - 原装版
 brew install --cask fcitx5
+
+# Noi - AI 工具集合
+brew install --cask noi
 ```
 
 
@@ -92,6 +98,7 @@ brew uninstall rime-wanxiang-updater
 | [fcitx5-pinyin](Casks/fcitx5-pinyin.rb) | Fcitx5 输入法框架 - 拼音版 | `brew install --cask tinypkg/tap/fcitx5-pinyin` | `0.2.11` | 🍎 Intel & ARM |
 | [fcitx5-rime](Casks/fcitx5-rime.rb) | Fcitx5 输入法框架 - 中州韵版 | `brew install --cask tinypkg/tap/fcitx5-rime` | `0.2.11` | 🍎 Intel & ARM |
 | [fcitx5](Casks/fcitx5.rb) | Fcitx5 输入法框架 - 原装版 | `brew install --cask tinypkg/tap/fcitx5` | `0.2.11` | 🍎 Intel & ARM |
+| [noi](Casks/noi.rb) | AI 工具集合 | `brew install --cask tinypkg/tap/noi` | `1.1.0` | 🍎 Intel & ARM |
 
 
 ### ⚙️ 命令行工具 (Formulas)
