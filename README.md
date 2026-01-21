@@ -35,6 +35,9 @@ brew install tinypkg/tap/rime-wanxiang-updater
 # Noi - AI 工具集合
 brew install --cask tinypkg/tap/noi
 
+# Blink1Control2 - USB RGB LED 控制工具
+brew install --cask tinypkg/tap/blink1control2
+
 ```
 
 ### 📋 传统方式
@@ -67,6 +70,9 @@ brew install --cask fcitx5
 
 # Noi - AI 工具集合
 brew install --cask noi
+
+# Blink1Control2 - USB RGB LED 控制工具
+brew install --cask blink1control2
 ```
 
 
@@ -99,6 +105,7 @@ brew uninstall rime-wanxiang-updater
 | [fcitx5-rime](Casks/fcitx5-rime.rb) | Fcitx5 输入法框架 - 中州韵版 | `brew install --cask tinypkg/tap/fcitx5-rime` | `0.2.11` | 🍎 Intel & ARM |
 | [fcitx5](Casks/fcitx5.rb) | Fcitx5 输入法框架 - 原装版 | `brew install --cask tinypkg/tap/fcitx5` | `0.2.11` | 🍎 Intel & ARM |
 | [noi](Casks/noi.rb) | AI 工具集合 | `brew install --cask tinypkg/tap/noi` | `1.1.0` | 🍎 Intel & ARM |
+| [blink1control2](Casks/blink1control2.rb) | USB RGB LED 控制工具 | `brew install --cask tinypkg/tap/blink1control2` | `2.2.9` | 🍎 Intel & ARM |
 
 
 ### ⚙️ 命令行工具 (Formulas)
@@ -147,6 +154,22 @@ brew uninstall rime-wanxiang-updater
 
   # 自动检测最新版本
   gh workflow run update-rime-wanxiang-updater-version.yml
+  ```
+
+### Noi 自动更新
+- **触发方式**: 手动触发
+- **工作流**: `.github/workflows/update-noi-version.yml`
+- **使用方法**:
+  ```bash
+  gh workflow run update-noi-version.yml -f version=1.1.0
+  ```
+
+### Blink1Control2 自动更新
+- **触发方式**: 手动触发
+- **工作流**: `.github/workflows/update-blink1control2-version.yml`
+- **使用方法**:
+  ```bash
+  gh workflow run update-blink1control2-version.yml -f version=2.2.9
   ```
 
 ## 🛠️ 开发指南
