@@ -41,6 +41,9 @@ brew install --cask tinypkg/tap/blink1control2
 # Antigravity Tools - AI 服务账号管理工具
 brew install --cask tinypkg/tap/antigravity-tools
 
+# Confirmo - AI 编程助手（桌面版）
+brew install --cask tinypkg/tap/confirmo
+
 ```
 
 ### 📋 传统方式
@@ -79,6 +82,9 @@ brew install --cask blink1control2
 
 # Antigravity Tools - AI 服务账号管理工具
 brew install --cask antigravity-tools
+
+# Confirmo - AI 编程助手（桌面版）
+brew install --cask confirmo
 ```
 
 
@@ -113,6 +119,7 @@ brew uninstall rime-wanxiang-updater
 | [noi](Casks/noi.rb) | AI 工具集合 | `brew install --cask tinypkg/tap/noi` | `1.1.0` | 🍎 Intel & ARM |
 | [blink1control2](Casks/blink1control2.rb) | USB RGB LED 控制工具 | `brew install --cask tinypkg/tap/blink1control2` | `2.2.9` | 🍎 Intel & ARM |
 | [antigravity-tools](Casks/antigravity-tools.rb) | AI 服务账号管理工具 | `brew install --cask tinypkg/tap/antigravity-tools` | `3.3.49` | 🍎 Intel & ARM 🐧 Intel & ARM |
+| [confirmo](Casks/confirmo.rb) | AI 编程助手（桌面版） | `brew install --cask tinypkg/tap/confirmo` | `1.0.14` | 🍎 Intel & ARM |
 
 
 ### ⚙️ 命令行工具 (Formulas)
@@ -190,6 +197,15 @@ brew uninstall rime-wanxiang-updater
 
   # 自动检测最新版本
   gh workflow run update-antigravity-tools-version.yml
+  ```
+
+### Confirmo 自动更新
+- **触发方式**: 手动触发
+- **工作流**: `.github/workflows/update-confirmo-version.yml`
+- **功能**: 自动下载 macOS 版本，计算 SHA256 校验和，更新版本和校验值
+- **使用方法**:
+  ```bash
+  gh workflow run update-confirmo-version.yml -f version=1.0.14
   ```
 
 ## 🛠️ 开发指南
