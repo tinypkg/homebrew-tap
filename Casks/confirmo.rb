@@ -18,8 +18,7 @@ cask "confirmo" do
   homepage "https://confirmo.love"
 
   livecheck do
-    url :url
-    strategy :header_match
+    skip "No version information available"
   end
 
   app "Confirmo.app"

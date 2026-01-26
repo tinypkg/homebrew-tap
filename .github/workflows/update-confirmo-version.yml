@@ -21,7 +21,7 @@ jobs:
       - name: Get current version
         id: version_check
         run: |
-          CURRENT_VERSION=$(grep 'version "' Casks/confirmo.rb | sed 's/.*version \"\\(.*\\)\".*/\\1/')
+          CURRENT_VERSION=$(grep 'version "' Casks/confirmo.rb | sed 's/.*version \"\(.*\)\".*/\1/')
           echo "Current version: $CURRENT_VERSION"
           NEW_VERSION="${{ inputs.version }}"
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
@@ -45,9 +45,14 @@ jobs:
 
       - name: Update cask file
         run: |
-          sed -i "s/version \\\".*\\\"/version \\\"${{ steps.version_check.outputs.new_version }}\\\"/\" Casks/confirmo.rb
-          sed -i '/on_intel do/,/end/{s/sha256 \".*\"/sha256 \"${{ steps.checksums.outputs.x64_sha256 }}\"/}' Casks/confirmo.rb
-          sed -i '/on_arm do/,/end/{s/sha256 \".*\"/sha256 \"${{ steps.checksums.outputs.arm64_sha256 }}\"/}' Casks/confirmo.rb
+          # Update version
+          sed -i "s/version \".*\"/version \"${{ steps.version_check.outputs.new_version }}\"/" Casks/confirmo.rb
+
+          # Update Intel (x64) SHA256 - using more precise matching to avoid matching other 'end' keywords
+          sed -i "/on_intel do/,/^  end\$/{s/sha256 \"[^\"]*\"/sha256 \"${{ steps.checksums.outputs.x64_sha256 }}\"/}" Casks/confirmo.rb
+
+          # Update ARM64 SHA256 - using more precise matching to avoid matching other 'end' keywords
+          sed -i "/on_arm do/,/^  end\$/{s/sha256 \"[^\"]*\"/sha256 \"${{ steps.checksums.outputs.arm64_sha256 }}\"/}" Casks/confirmo.rb
 
       - name: Commit and push changes
         run: |
