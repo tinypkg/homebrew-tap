@@ -2,11 +2,11 @@
 # frozen_string_literal: true
 
 cask "go-pkg" do
-  arch arm: "arm64", intel: "amd64"
+  arch arm: "arm64", intel: "fd05649df1fd6ea8cf98ecda0e9480bb6304f277be8186bb63edd5245b0629f5"
 
-  version "1.24.3"
-  sha256 arm:   "4f6e7e49c9759c9d5d0bae3c0ed80c6c957de28c92d20f3a6cd8afc654bb57e1",
-         intel: "89f836561f4c6362d5291807a33e6f75fc1d71bd1c5f3fcf68e22e3aef36d98e"
+  version "1.25.6"
+  sha256 arm:   "b2f085e9aa3549c432b8c1984935e2e80120a3a2d5baa2c25374d6997e4e9469",
+         intel: "fd05649df1fd6ea8cf98ecda0e9480bb6304f277be8186bb63edd5245b0629f5"
 
   # Official download URL from go.dev
   url "https://go.dev/dl/go#{version}.darwin-#{arch}.pkg"
