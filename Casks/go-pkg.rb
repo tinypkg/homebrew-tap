@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 cask "go-pkg" do
-  arch arm: "arm64", intel: "fd05649df1fd6ea8cf98ecda0e9480bb6304f277be8186bb63edd5245b0629f5"
+  arch arm: "arm64", intel: "amd64"
 
   version "1.25.6"
   sha256 arm:   "b2f085e9aa3549c432b8c1984935e2e80120a3a2d5baa2c25374d6997e4e9469",

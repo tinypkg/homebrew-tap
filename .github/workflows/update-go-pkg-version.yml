@@ -114,8 +114,9 @@ jobs:
           sed -i "s/version \"[^\"]*\"/version \"${VERSION}\"/" Casks/go-pkg.rb
 
           # Update SHA256 checksums (multi-line format)
+          # Use more specific patterns to avoid matching the arch line
           sed -i "s/sha256 arm:   \"[^\"]*\"/sha256 arm:   \"${ARM64_SHA256}\"/" Casks/go-pkg.rb
-          sed -i "s/intel: \"[^\"]*\"/intel: \"${AMD64_SHA256}\"/" Casks/go-pkg.rb
+          sed -i "s/^\([[:space:]]*\)intel: \"[^\"]*\"/\1intel: \"${AMD64_SHA256}\"/" Casks/go-pkg.rb
 
           echo "Updated cask file:"
           head -15 Casks/go-pkg.rb
