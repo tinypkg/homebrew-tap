@@ -1,0 +1,157 @@
+name: Update Go PKG Version
+
+on:
+  schedule:
+    # Run every Tuesday at 10:00 UTC
+    # Go minor releases typically happen on the first Tuesday/Wednesday of each month
+    - cron: "0 10 * * 2"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Go version to update to (e.g., 1.24.3). Leave empty for auto-detection."
+        required: false
+        type: string
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get current version from cask
+        id: current
+        run: |
+          CURRENT_VERSION=$(grep -m1 'version "' Casks/go-pkg.rb | sed 's/.*version "\([^"]*\)".*/\1/')
+          echo "version=${CURRENT_VERSION}" >> $GITHUB_OUTPUT
+          echo "Current version: ${CURRENT_VERSION}"
+
+      - name: Detect latest Go version
+        id: latest
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            LATEST_VERSION="${{ inputs.version }}"
+            echo "Using manually specified version: ${LATEST_VERSION}"
+          else
+            # Fetch latest stable version from Go's official API
+            LATEST_VERSION=$(curl -sf "https://go.dev/dl/?mode=json" | \
+              jq -r '[.[] | select(.stable == true)][0].version' | \
+              sed 's/^go//')
+            echo "Auto-detected latest version: ${LATEST_VERSION}"
+          fi
+
+          if [ -z "${LATEST_VERSION}" ]; then
+            echo "Failed to detect latest version"
+            exit 1
+          fi
+
+          echo "version=${LATEST_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Check if update is needed
+        id: version_check
+        run: |
+          CURRENT="${{ steps.current.outputs.version }}"
+          LATEST="${{ steps.latest.outputs.version }}"
+
+          if [ "${CURRENT}" = "${LATEST}" ]; then
+            echo "Already up to date (${CURRENT})"
+            echo "should_update=false" >> $GITHUB_OUTPUT
+          else
+            echo "Update available: ${CURRENT} -> ${LATEST}"
+            echo "should_update=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download and calculate checksums
+        if: steps.version_check.outputs.should_update == 'true'
+        id: checksums
+        run: |
+          VERSION="${{ steps.latest.outputs.version }}"
+
+          echo "Downloading Go ${VERSION} for ARM64..."
+          curl -fL -o "go-arm64.pkg" "https://go.dev/dl/go${VERSION}.darwin-arm64.pkg"
+          ARM64_SIZE=$(stat -c%s "go-arm64.pkg" 2>/dev/null || stat -f%z "go-arm64.pkg")
+          echo "ARM64 package size: ${ARM64_SIZE} bytes"
+
+          if [ "${ARM64_SIZE}" -lt 50000000 ]; then
+            echo "ARM64 package too small, download may have failed"
+            exit 1
+          fi
+
+          echo "Downloading Go ${VERSION} for AMD64..."
+          curl -fL -o "go-amd64.pkg" "https://go.dev/dl/go${VERSION}.darwin-amd64.pkg"
+          AMD64_SIZE=$(stat -c%s "go-amd64.pkg" 2>/dev/null || stat -f%z "go-amd64.pkg")
+          echo "AMD64 package size: ${AMD64_SIZE} bytes"
+
+          if [ "${AMD64_SIZE}" -lt 50000000 ]; then
+            echo "AMD64 package too small, download may have failed"
+            exit 1
+          fi
+
+          # Calculate SHA256 checksums
+          ARM64_SHA256=$(sha256sum "go-arm64.pkg" | cut -d' ' -f1)
+          AMD64_SHA256=$(sha256sum "go-amd64.pkg" | cut -d' ' -f1)
+
+          echo "ARM64 SHA256: ${ARM64_SHA256}"
+          echo "AMD64 SHA256: ${AMD64_SHA256}"
+
+          echo "arm64_sha256=${ARM64_SHA256}" >> $GITHUB_OUTPUT
+          echo "amd64_sha256=${AMD64_SHA256}" >> $GITHUB_OUTPUT
+
+          # Cleanup
+          rm -f go-arm64.pkg go-amd64.pkg
+
+      - name: Update cask file
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          VERSION="${{ steps.latest.outputs.version }}"
+          ARM64_SHA256="${{ steps.checksums.outputs.arm64_sha256 }}"
+          AMD64_SHA256="${{ steps.checksums.outputs.amd64_sha256 }}"
+
+          # Update version
+          sed -i "s/version \"[^\"]*\"/version \"${VERSION}\"/" Casks/go-pkg.rb
+
+          # Update SHA256 checksums (multi-line format)
+          sed -i "s/sha256 arm:   \"[^\"]*\"/sha256 arm:   \"${ARM64_SHA256}\"/" Casks/go-pkg.rb
+          sed -i "s/intel: \"[^\"]*\"/intel: \"${AMD64_SHA256}\"/" Casks/go-pkg.rb
+
+          echo "Updated cask file:"
+          head -15 Casks/go-pkg.rb
+
+      - name: Commit and push changes
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          VERSION="${{ steps.latest.outputs.version }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add Casks/go-pkg.rb
+
+          # Check if there are changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update Go to version ${VERSION}"
+            git push
+            echo "Changes committed and pushed"
+          fi
+
+      - name: Summary
+        run: |
+          echo "## Go PKG Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Item | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Current Version | ${{ steps.current.outputs.version }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Latest Version | ${{ steps.latest.outputs.version }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Update Required | ${{ steps.version_check.outputs.should_update }} |" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.version_check.outputs.should_update }}" = "true" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Checksums" >> $GITHUB_STEP_SUMMARY
+            echo "- ARM64: \`${{ steps.checksums.outputs.arm64_sha256 }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "- AMD64: \`${{ steps.checksums.outputs.amd64_sha256 }}\`" >> $GITHUB_STEP_SUMMARY
+          fi
