@@ -14,9 +14,6 @@ cask "go-pkg" do
   desc "Go programming language (official pkg installer)"
   homepage "https://go.dev/"
 
-  # Conflict with Homebrew's official go formula
-  conflicts_with formula: "go"
-
   # Automatically check for new stable releases from official API
   livecheck do
     url "https://go.dev/dl/?mode=json"
