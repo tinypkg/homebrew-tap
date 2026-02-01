@@ -32,6 +32,9 @@ brew install --cask tinypkg/tap/fcitx5
 # 万象拼音输入法更新工具
 brew install tinypkg/tap/rime-wanxiang-updater
 
+# Mise - 多语言版本管理工具
+brew install tinypkg/tap/mise-bin
+
 # Noi - AI 工具集合
 brew install --cask tinypkg/tap/noi
 
@@ -99,6 +102,9 @@ brew install --cask go-pkg
 ```bash
 # 万象拼音输入法更新工具
 brew install rime-wanxiang-updater
+
+# Mise - 多语言版本管理工具
+brew install mise-bin
 ```
 
 ### 3️⃣ 卸载软件
@@ -134,6 +140,7 @@ brew uninstall rime-wanxiang-updater
 | 软件名称 | 说明 | 一键安装命令 | 版本 | 架构支持 |
 |---------|------|-------------|------|----------|
 | [rime-wanxiang-updater](Formula/rime-wanxiang-updater.rb) | 万象拼音输入法词库更新工具 | `brew install tinypkg/tap/rime-wanxiang-updater` | `0.6.10` | 🍎 Intel & ARM |
+| [mise-bin](Formula/mise-bin.rb) | 多语言版本管理工具 (polyglot version manager) | `brew install tinypkg/tap/mise-bin` | `2026.1.12` | 🍎 Intel & ARM |
 
 ## ✨ 特性
 
@@ -226,6 +233,19 @@ brew uninstall rime-wanxiang-updater
 
   # 自动检测最新版本
   gh workflow run update-go-pkg-version.yml
+  ```
+
+### Mise Bin 自动更新
+- **触发方式**: 每12小时定时检查 + 手动触发（可自动检测最新版本）
+- **工作流**: `.github/workflows/update-mise-bin-version.yml`
+- **功能**: 自动从 GitHub Releases 检测最新版本，下载 macOS 二进制文件，计算 SHA256 校验和
+- **使用方法**:
+  ```bash
+  # 手动指定版本
+  gh workflow run update-mise-bin-version.yml -f version=2026.1.12
+
+  # 自动检测最新版本
+  gh workflow run update-mise-bin-version.yml
   ```
 
 ## 🛠️ 开发指南
