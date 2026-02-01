@@ -140,7 +140,7 @@ brew uninstall rime-wanxiang-updater
 | 软件名称 | 说明 | 一键安装命令 | 版本 | 架构支持 |
 |---------|------|-------------|------|----------|
 | [rime-wanxiang-updater](Formula/rime-wanxiang-updater.rb) | 万象拼音输入法词库更新工具 | `brew install tinypkg/tap/rime-wanxiang-updater` | `0.6.10` | 🍎 Intel & ARM |
-| [mise-bin](Formula/mise-bin.rb) | 多语言版本管理工具 (polyglot version manager) | `brew install tinypkg/tap/mise-bin` | `2026.1.12` | 🍎 Intel & ARM |
+| [mise-bin](Formula/mise-bin.rb) | 多语言版本管理工具 (polyglot version manager) | `brew install tinypkg/tap/mise-bin` | `2024.1.0` | 🍎 Intel & ARM |
 
 ## ✨ 特性
 
