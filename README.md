@@ -47,6 +47,9 @@ brew install --cask tinypkg/tap/antigravity-tools
 # Confirmo - AI 编程助手（桌面版）
 brew install --cask tinypkg/tap/confirmo
 
+# CodePilot - Claude Code 桌面客户端
+brew install --cask tinypkg/tap/codepilot
+
 # Go - Go 编程语言（官方 pkg 安装器）
 brew install --cask tinypkg/tap/go-pkg
 
@@ -92,6 +95,9 @@ brew install --cask antigravity-tools
 # Confirmo - AI 编程助手（桌面版）
 brew install --cask confirmo
 
+# CodePilot - Claude Code 桌面客户端
+brew install --cask codepilot
+
 # Go - Go 编程语言（官方 pkg 安装器）
 brew install --cask go-pkg
 ```
@@ -132,6 +138,7 @@ brew uninstall rime-wanxiang-updater
 | [blink1control2](Casks/blink1control2.rb) | USB RGB LED 控制工具 | `brew install --cask tinypkg/tap/blink1control2` | `2.2.9` | 🍎 Intel & ARM |
 | [antigravity-tools](Casks/antigravity-tools.rb) | AI 服务账号管理工具 | `brew install --cask tinypkg/tap/antigravity-tools` | `3.3.49` | 🍎 Intel & ARM 🐧 Intel & ARM |
 | [confirmo](Casks/confirmo.rb) | AI 编程助手（桌面版） | `brew install --cask tinypkg/tap/confirmo` | `1.0.14` | 🍎 Intel & ARM |
+| [codepilot](Casks/codepilot.rb) | Claude Code 桌面客户端 | `brew install --cask tinypkg/tap/codepilot` | `0.7.0` | 🍎 Intel & ARM |
 | [go-pkg](Casks/go-pkg.rb) | Go 编程语言（官方 pkg 安装器） | `brew install --cask tinypkg/tap/go-pkg` | `1.24.3` | 🍎 Intel & ARM |
 
 
@@ -220,6 +227,19 @@ brew uninstall rime-wanxiang-updater
 - **使用方法**:
   ```bash
   gh workflow run update-confirmo-version.yml -f version=1.0.14
+  ```
+
+### CodePilot 自动更新
+- **触发方式**: 每12小时定时检查 + 手动触发（可自动检测最新版本）
+- **工作流**: `.github/workflows/update-codepilot-version.yml`
+- **功能**: 自动从 GitHub Releases 检测最新版本，下载 macOS arm64/x64 版本，计算 SHA256 校验和
+- **使用方法**:
+  ```bash
+  # 手动指定版本
+  gh workflow run update-codepilot-version.yml -f version=0.7.0
+
+  # 自动检测最新版本
+  gh workflow run update-codepilot-version.yml
   ```
 
 ### Go PKG 自动更新
