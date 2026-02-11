@@ -14,45 +14,27 @@
 无需添加 tap，直接安装：
 
 ```bash
-# 懒猫微服桌面客户端
-brew install --cask tinypkg/tap/lzc-client-desktop
+## AI 与编程工具
+brew install --cask tinypkg/tap/codepilot          # CodePilot - Claude Code 桌面客户端
+brew install --cask tinypkg/tap/claudebot           # ClaudeBot - Use claude code anywhere
+brew install --cask tinypkg/tap/confirmo            # Confirmo - AI 编程助手（桌面版）
+brew install --cask tinypkg/tap/cc-switch           # CC Switch - Claude Code 配置管理工具
+brew install --cask tinypkg/tap/antigravity-tools   # Antigravity Tools - AI 服务账号管理工具
+brew install --cask tinypkg/tap/noi                 # Noi - AI 工具集合
 
-# CC Switch - Claude Code 配置管理工具
-brew install --cask tinypkg/tap/cc-switch
+## 输入法
+brew install --cask tinypkg/tap/fcitx5-pinyin       # Fcitx5 输入法 - 拼音版
+brew install --cask tinypkg/tap/fcitx5-rime         # Fcitx5 输入法 - 中州韵版
+brew install --cask tinypkg/tap/fcitx5              # Fcitx5 输入法 - 原装版
 
-# Fcitx5 输入法 - 拼音版
-brew install --cask tinypkg/tap/fcitx5-pinyin
+## 其他工具
+brew install --cask tinypkg/tap/go-pkg              # Go - Go 编程语言（官方 pkg 安装器）
+brew install --cask tinypkg/tap/blink1control2      # Blink1Control2 - USB RGB LED 控制工具
+brew install --cask tinypkg/tap/lzc-client-desktop  # 懒猫微服桌面客户端
 
-# Fcitx5 输入法 - 中州韵版
-brew install --cask tinypkg/tap/fcitx5-rime
-
-# Fcitx5 输入法 - 原装版
-brew install --cask tinypkg/tap/fcitx5
-
-# 万象拼音输入法更新工具
-brew install tinypkg/tap/rime-wanxiang-updater
-
-# Mise - 多语言版本管理工具
-brew install tinypkg/tap/mise-bin
-
-# Noi - AI 工具集合
-brew install --cask tinypkg/tap/noi
-
-# Blink1Control2 - USB RGB LED 控制工具
-brew install --cask tinypkg/tap/blink1control2
-
-# Antigravity Tools - AI 服务账号管理工具
-brew install --cask tinypkg/tap/antigravity-tools
-
-# Confirmo - AI 编程助手（桌面版）
-brew install --cask tinypkg/tap/confirmo
-
-# CodePilot - Claude Code 桌面客户端
-brew install --cask tinypkg/tap/codepilot
-
-# Go - Go 编程语言（官方 pkg 安装器）
-brew install --cask tinypkg/tap/go-pkg
-
+## 命令行工具
+brew install tinypkg/tap/rime-wanxiang-updater      # 万象拼音输入法更新工具
+brew install tinypkg/tap/mise-bin                   # Mise - 多语言版本管理工具
 ```
 
 ### 📋 传统方式
@@ -68,38 +50,23 @@ brew tap tinypkg/tap
 **GUI 应用 (Casks)**
 
 ```bash
-# 懒猫微服桌面客户端
-brew install --cask lzc-client-desktop
+# AI 与编程工具
+brew install --cask codepilot          # Claude Code 桌面客户端
+brew install --cask claudebot          # Use claude code anywhere
+brew install --cask confirmo           # AI 编程助手（桌面版）
+brew install --cask cc-switch          # Claude Code 配置管理工具
+brew install --cask antigravity-tools  # AI 服务账号管理工具
+brew install --cask noi                # AI 工具集合
 
-# CC Switch - Claude Code 配置管理工具
-brew install --cask cc-switch
+# 输入法
+brew install --cask fcitx5-pinyin      # Fcitx5 输入法 - 拼音版
+brew install --cask fcitx5-rime        # Fcitx5 输入法 - 中州韵版
+brew install --cask fcitx5             # Fcitx5 输入法 - 原装版
 
-# Fcitx5 输入法 - 拼音版
-brew install --cask fcitx5-pinyin
-
-# Fcitx5 输入法 - 中州韵版
-brew install --cask fcitx5-rime
-
-# Fcitx5 输入法 - 原装版
-brew install --cask fcitx5
-
-# Noi - AI 工具集合
-brew install --cask noi
-
-# Blink1Control2 - USB RGB LED 控制工具
-brew install --cask blink1control2
-
-# Antigravity Tools - AI 服务账号管理工具
-brew install --cask antigravity-tools
-
-# Confirmo - AI 编程助手（桌面版）
-brew install --cask confirmo
-
-# CodePilot - Claude Code 桌面客户端
-brew install --cask codepilot
-
-# Go - Go 编程语言（官方 pkg 安装器）
-brew install --cask go-pkg
+# 其他工具
+brew install --cask go-pkg             # Go 编程语言（官方 pkg 安装器）
+brew install --cask blink1control2     # USB RGB LED 控制工具
+brew install --cask lzc-client-desktop # 懒猫微服桌面客户端
 ```
 
 
@@ -125,22 +92,32 @@ brew uninstall rime-wanxiang-updater
 
 ## 📋 可用软件
 
-### 🖥️ GUI 应用 (Casks)
+### 🤖 AI 与编程工具
 
 | 软件名称 | 说明 | 一键安装命令 | 版本 | 架构支持 |
 |---------|------|-------------|------|----------|
-| [lzc-client-desktop](Casks/lzc-client-desktop.rb) | 懒猫微服桌面客户端 | `brew install --cask tinypkg/tap/lzc-client-desktop` | `1.6.7` | 🍎 Intel & ARM |
+| [codepilot](Casks/codepilot.rb) | Claude Code 桌面客户端 | `brew install --cask tinypkg/tap/codepilot` | `0.7.0` | 🍎 Intel & ARM |
+| [claudebot](Casks/claudebot.rb) | Use claude code anywhere | `brew install --cask tinypkg/tap/claudebot` | `1.1.2` | 🍎 Intel & ARM |
+| [confirmo](Casks/confirmo.rb) | AI 编程助手（桌面版） | `brew install --cask tinypkg/tap/confirmo` | `1.0.14` | 🍎 Intel & ARM |
 | [cc-switch](Casks/cc-switch.rb) | Claude Code/Codex 配置管理器 | `brew install --cask tinypkg/tap/cc-switch` | `3.9.1` | 🍎 Intel & ARM |
+| [antigravity-tools](Casks/antigravity-tools.rb) | AI 服务账号管理工具 | `brew install --cask tinypkg/tap/antigravity-tools` | `3.3.49` | 🍎 Intel & ARM 🐧 Intel & ARM |
+| [noi](Casks/noi.rb) | AI 工具集合 | `brew install --cask tinypkg/tap/noi` | `1.1.0` | 🍎 Intel & ARM |
+
+### 🔤 输入法
+
+| 软件名称 | 说明 | 一键安装命令 | 版本 | 架构支持 |
+|---------|------|-------------|------|----------|
 | [fcitx5-pinyin](Casks/fcitx5-pinyin.rb) | Fcitx5 输入法框架 - 拼音版 | `brew install --cask tinypkg/tap/fcitx5-pinyin` | `0.2.11` | 🍎 Intel & ARM |
 | [fcitx5-rime](Casks/fcitx5-rime.rb) | Fcitx5 输入法框架 - 中州韵版 | `brew install --cask tinypkg/tap/fcitx5-rime` | `0.2.11` | 🍎 Intel & ARM |
 | [fcitx5](Casks/fcitx5.rb) | Fcitx5 输入法框架 - 原装版 | `brew install --cask tinypkg/tap/fcitx5` | `0.2.11` | 🍎 Intel & ARM |
-| [noi](Casks/noi.rb) | AI 工具集合 | `brew install --cask tinypkg/tap/noi` | `1.1.0` | 🍎 Intel & ARM |
-| [blink1control2](Casks/blink1control2.rb) | USB RGB LED 控制工具 | `brew install --cask tinypkg/tap/blink1control2` | `2.2.9` | 🍎 Intel & ARM |
-| [antigravity-tools](Casks/antigravity-tools.rb) | AI 服务账号管理工具 | `brew install --cask tinypkg/tap/antigravity-tools` | `3.3.49` | 🍎 Intel & ARM 🐧 Intel & ARM |
-| [confirmo](Casks/confirmo.rb) | AI 编程助手（桌面版） | `brew install --cask tinypkg/tap/confirmo` | `1.0.14` | 🍎 Intel & ARM |
-| [codepilot](Casks/codepilot.rb) | Claude Code 桌面客户端 | `brew install --cask tinypkg/tap/codepilot` | `0.7.0` | 🍎 Intel & ARM |
-| [go-pkg](Casks/go-pkg.rb) | Go 编程语言（官方 pkg 安装器） | `brew install --cask tinypkg/tap/go-pkg` | `1.24.3` | 🍎 Intel & ARM |
 
+### 🛠️ 其他工具
+
+| 软件名称 | 说明 | 一键安装命令 | 版本 | 架构支持 |
+|---------|------|-------------|------|----------|
+| [go-pkg](Casks/go-pkg.rb) | Go 编程语言（官方 pkg 安装器） | `brew install --cask tinypkg/tap/go-pkg` | `1.24.3` | 🍎 Intel & ARM |
+| [blink1control2](Casks/blink1control2.rb) | USB RGB LED 控制工具 | `brew install --cask tinypkg/tap/blink1control2` | `2.2.9` | 🍎 Intel & ARM |
+| [lzc-client-desktop](Casks/lzc-client-desktop.rb) | 懒猫微服桌面客户端 | `brew install --cask tinypkg/tap/lzc-client-desktop` | `1.6.7` | 🍎 Intel & ARM |
 
 ### ⚙️ 命令行工具 (Formulas)
 
@@ -240,6 +217,19 @@ brew uninstall rime-wanxiang-updater
 
   # 自动检测最新版本
   gh workflow run update-codepilot-version.yml
+  ```
+
+### ClaudeBot 自动更新
+- **触发方式**: 每12小时定时检查 + 手动触发（可自动检测最新版本）
+- **工作流**: `.github/workflows/update-claudebot-version.yml`
+- **功能**: 自动从 GitHub Releases 检测最新版本，下载 macOS arm64/x64 版本，计算 SHA256 校验和
+- **使用方法**:
+  ```bash
+  # 手动指定版本
+  gh workflow run update-claudebot-version.yml -f version=1.1.3
+
+  # 自动检测最新版本
+  gh workflow run update-claudebot-version.yml
   ```
 
 ### Go PKG 自动更新
