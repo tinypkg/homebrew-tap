@@ -1,24 +1,24 @@
 class MiseBin < Formula
   desc "The front-end to your dev env (polyglot version manager)"
   homepage "https://mise.jdx.dev/"
-  version "2026.2.15"
+  version "2026.2.16"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/jdx/mise/releases/download/v2026.2.15/mise-v2026.2.15-macos-arm64"
-      sha256 "877a210a447ce7de30653792952f42dcc0b813dcb25780f2ad16d02293d3d24a"
+      url "https://github.com/jdx/mise/releases/download/v2026.2.16/mise-v2026.2.16-macos-arm64"
+      sha256 "410726f0c4d5d544119a9301445d0f512adf021ef2f02e086c9ef5dd61b8be24"
 
       def install
-        bin.install "mise-v2026.2.15-macos-arm64" => "mise"
+        bin.install "mise-v2026.2.16-macos-arm64" => "mise"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/jdx/mise/releases/download/v2026.2.15/mise-v2026.2.15-macos-x64"
-      sha256 "42160c46efd73784fca5ad3ea3e26d00f2e4649293b0d23ef39c9129dc209ceb"
+      url "https://github.com/jdx/mise/releases/download/v2026.2.16/mise-v2026.2.16-macos-x64"
+      sha256 "d1c1cf9e5e69f4b2ea3f901557dc22e59e05577ceb93bb694df24a66306995fe"
 
       def install
-        bin.install "mise-v2026.2.15-macos-x64" => "mise"
+        bin.install "mise-v2026.2.16-macos-x64" => "mise"
       end
     end
   end
