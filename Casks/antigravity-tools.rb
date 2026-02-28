@@ -1,5 +1,5 @@
 cask "antigravity-tools" do
-  version "4.1.25"
+  version "4.1.26"
 
   name "Antigravity Tools"
   desc "Professional Account Management for AI Services"
