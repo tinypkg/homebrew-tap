@@ -39,7 +39,7 @@ jobs:
               exit 1
             fi
 
-            NEW_VERSION=$(echo "$METADATA" | sed -n 's/.*"buildVersion":"v\([^"]*\)".*/\1/p' | head -n 1)
+            NEW_VERSION=$(echo "$METADATA" | python3 -c "import sys,json; d=json.load(sys.stdin); v=d['buildVersion']; print(v[1:] if v.startswith('v') else v)")
             if [ -z "$NEW_VERSION" ]; then
               echo "Failed to parse version from metadata"
               exit 1
