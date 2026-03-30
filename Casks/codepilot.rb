@@ -1,13 +1,13 @@
 cask "codepilot" do
-  version "0.42.0"
+  version "0.43.1"
 
   on_arm do
-    sha256 "a7df03bdc26408e5f02a91205abab68e7a44f131a03032427157aff15fc4cc66"
+    sha256 "e236e98daef448a589c8bd36e203eda45af15bed5cafea238aa54aa48a75f7db"
 
     url "https://github.com/op7418/CodePilot/releases/download/v#{version}/CodePilot-#{version}-arm64.dmg"
   end
   on_intel do
-    sha256 "e3156fe9863a234f9954a2c6265761b5321161db4ca483c2461ec3ab92362e57"
+    sha256 "1639f4747ba82a9f42f604f59f3623a9ac331dd8dba8e4962c740500e8f6dfc5"
 
     url "https://github.com/op7418/CodePilot/releases/download/v#{version}/CodePilot-#{version}-x64.dmg"
   end
