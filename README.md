@@ -33,6 +33,7 @@ brew install --cask tinypkg/tap/blink1control2      # Blink1Control2 - USB RGB L
 brew install --cask tinypkg/tap/lzc-client-desktop  # 懒猫微服桌面客户端
 brew install --cask tinypkg/tap/macoptimizer        # MacOptimizer - macOS 系统清理优化工具
 brew install --cask tinypkg/tap/recordly            # Recordly - 免费屏幕录制工具
+brew install --cask tinypkg/tap/capso               # Capso - 开源截图和屏幕录制工具
 
 ## 命令行工具
 brew install tinypkg/tap/rime-wanxiang-updater      # 万象拼音输入法更新工具
@@ -72,6 +73,7 @@ brew install --cask blink1control2     # USB RGB LED 控制工具
 brew install --cask lzc-client-desktop # 懒猫微服桌面客户端
 brew install --cask macoptimizer       # macOS 系统清理优化工具
 brew install --cask recordly           # 免费屏幕录制工具
+brew install --cask capso              # 开源截图和屏幕录制工具
 ```
 
 
@@ -128,6 +130,7 @@ brew uninstall rime-wanxiang-updater
 | [lzc-client-desktop](Casks/lzc-client-desktop.rb) | 懒猫微服桌面客户端 | `brew install --cask tinypkg/tap/lzc-client-desktop` | `1.6.7` | 🍎 Intel & ARM |
 | [macoptimizer](Casks/macoptimizer.rb) | macOS 系统清理优化工具 | `brew install --cask tinypkg/tap/macoptimizer` | `4.0.6` | 🍎 Intel & ARM |
 | [recordly](Casks/recordly.rb) | 免费屏幕录制工具 | `brew install --cask tinypkg/tap/recordly` | `1.1.19` | 🍎 Intel & ARM |
+| [capso](Casks/capso.rb) | 开源截图和屏幕录制工具 | `brew install --cask tinypkg/tap/capso` | `0.1.9` | 🍎 macOS Sequoia+ |
 
 ### ⚙️ 命令行工具 (Formulas)
 
@@ -306,6 +309,19 @@ brew uninstall rime-wanxiang-updater
 
   # 自动检测最新版本
   gh workflow run update-recordly-version.yml
+  ```
+
+### Capso 自动更新
+- **触发方式**: 每12小时定时检查 + 手动触发（可自动检测最新版本）
+- **工作流**: `.github/workflows/update-capso-version.yml`
+- **功能**: 自动从 GitHub Releases 检测最新版本，下载 macOS DMG，计算 SHA256 校验和
+- **使用方法**:
+  ```bash
+  # 手动指定版本
+  gh workflow run update-capso-version.yml -f version=0.1.9
+
+  # 自动检测最新版本
+  gh workflow run update-capso-version.yml
   ```
 
 ## 🛠️ 开发指南
