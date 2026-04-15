@@ -14,6 +14,13 @@ cask "winmux" do
 
   app "WinMux.app"
 
+  # 清除 quarantine 属性，解决 macOS "已损坏" 问题
+  postflight do
+    system_command "/usr/bin/xattr",
+                   args: ["-cr", "#{appdir}/WinMux.app"],
+                   sudo: false
+  end
+
   zap trash: [
     "~/Library/Application Support/WinMux",
     "~/Library/Preferences/com.zimengxiong.winmux.plist",
