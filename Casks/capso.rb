@@ -1,6 +1,6 @@
 cask "capso" do
-  version "0.2.0"
-  sha256 "bda39137142545f75a4e5ffd691c9255c8cf8383f410571e245f6a64c6f98c79"
+  version "0.2.1"
+  sha256 "d23cac7063bb628556d5e744980d1aa9b8928db2bd0f98c9a10250ce4f91dafc"
 
   url "https://github.com/lzhgus/Capso/releases/download/v#{version}/Capso-#{version}.dmg"
   name "Capso"
