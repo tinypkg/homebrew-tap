@@ -37,6 +37,7 @@ brew install --cask tinypkg/tap/capso               # Capso - 开源截图和屏
 brew install --cask tinypkg/tap/winmux              # WinMux - macOS 窗口管理器
 brew install --cask tinypkg/tap/shichizip           # ShichiZip - 7-Zip derivative for macOS
 brew install --cask tinypkg/tap/shichizip-zs        # ShichiZip ZS - 7-Zip with Zstandard compression
+brew install --cask tinypkg/tap/puremac             # PureMac - macOS app manager and system cleaner
 
 ## 命令行工具
 brew install tinypkg/tap/rime-wanxiang-updater      # 万象拼音输入法更新工具
@@ -81,6 +82,7 @@ brew install --cask capso              # 开源截图和屏幕录制工具
 brew install --cask winmux             # macOS 窗口管理器
   brew install --cask shichizip          # 7-Zip derivative for macOS
   brew install --cask shichizip-zs       # 7-Zip with Zstandard compression
+  brew install --cask puremac            # macOS app manager and system cleaner
 ```
 
 
@@ -143,6 +145,7 @@ brew uninstall rime-wanxiang-updater
 | [winmux](Casks/winmux.rb) | macOS 窗口管理器（基于 Aerospace） | `brew install --cask tinypkg/tap/winmux` | `0.1.2` | 🍎 Intel & ARM |
 | [shichizip](Casks/shichizip.rb) | 7-Zip derivative for macOS | `brew install --cask tinypkg/tap/shichizip` | `0.0.3` | 🍎 Intel & ARM |
 | [shichizip-zs](Casks/shichizip-zs.rb) | 7-Zip with Zstandard compression | `brew install --cask tinypkg/tap/shichizip-zs` | `0.0.3` | 🍎 Intel & ARM |
+| [puremac](Casks/puremac.rb) | macOS app manager and system cleaner | `brew install --cask tinypkg/tap/puremac` | `2.0.0` | 🍎 Intel & ARM |
 
 ### ⚙️ 命令行工具 (Formulas)
 
@@ -361,6 +364,19 @@ brew uninstall rime-wanxiang-updater
 
   # 自动检测最新版本
   gh workflow run update-shichizip-version.yml
+  ```
+
+### PureMac 自动更新
+- **触发方式**: 每12小时定时检查 + 手动触发（可自动检测最新版本）
+- **工作流**: `.github/workflows/update-puremac-version.yml`
+- **功能**: 自动从 GitHub Releases 检测最新版本，下载 macOS ZIP，计算 SHA256 校验和
+- **使用方法**:
+  ```bash
+  # 手动指定版本
+  gh workflow run update-puremac-version.yml -f version=2.0.0
+
+  # 自动检测最新版本
+  gh workflow run update-puremac-version.yml
   ```
 
 ## 🛠️ 开发指南
