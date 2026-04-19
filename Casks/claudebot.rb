@@ -1,13 +1,13 @@
 cask "claudebot" do
-  version "1.1.4"
+  version "1.1.6"
 
   on_arm do
-    sha256 "ca0ea6be0b24c785cd6cd1e7d847749328b3f3de84dfb889608c9ae7b0ba5139"
+    sha256 "a9e059473ec24210a9097b6539467ef3a92aadf2ea68b6b9f73aab15a22355b4"
 
     url "https://github.com/Philo-Li/claudebot/releases/download/v#{version}/ClaudeBot-#{version}-arm64.dmg"
   end
   on_intel do
-    sha256 "dd85e6799bedf19023e19c63e48183f7544488b84d6fca4fed4d1d0f55c7b141"
+    sha256 "760002e581d93ef6248ba39edc846d051e8ead21f98640186e12ddbde300c11e"
 
     url "https://github.com/Philo-Li/claudebot/releases/download/v#{version}/ClaudeBot-#{version}.dmg"
   end
