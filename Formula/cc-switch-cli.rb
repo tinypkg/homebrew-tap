@@ -25,7 +25,7 @@ class CcSwitchCli < Formula
 
   def post_install
     # Remove quarantine attribute from the binary
-    chmod "+x", bin/"cc-switch"
+    chmod "+x", bin/"cc-switch-cli"
     system_command "/usr/bin/xattr",
                    args: ["-cr", bin/"cc-switch-cli"],
                    sudo: false
