@@ -33,7 +33,7 @@ jobs:
             echo "Using manually specified version: $NEW_VERSION"
           else
             # 从 GitHub API 获取最新版本
-            RELEASE_INFO=$(curl -f -s "https://api.github.com/repos/webadderall/Recordly/releases/latest")
+            RELEASE_INFO=$(curl -f -s "https://api.github.com/repos/webadderallorg/Recordly/releases/latest")
             if [ $? -ne 0 ]; then
               echo "Failed to fetch release info"
               exit 1
@@ -62,7 +62,7 @@ jobs:
       - name: Download arm64 DMG
         if: steps.version_check.outputs.should_update == 'true'
         run: |
-          curl -f -L -o /tmp/recordly-arm64.dmg "https://github.com/webadderall/Recordly/releases/download/v${{ steps.version_check.outputs.new_version }}/Recordly-arm64.dmg"
+          curl -f -L -o /tmp/recordly-arm64.dmg "https://github.com/webadderallorg/Recordly/releases/download/v${{ steps.version_check.outputs.new_version }}/Recordly-arm64.dmg"
           if [ ! -s /tmp/recordly-arm64.dmg ] || [ $(stat -c%s /tmp/recordly-arm64.dmg) -lt 100000 ]; then
             echo "arm64 DMG file is missing or too small"
             exit 1
@@ -71,7 +71,7 @@ jobs:
       - name: Download x64 DMG
         if: steps.version_check.outputs.should_update == 'true'
         run: |
-          curl -f -L -o /tmp/recordly-x64.dmg "https://github.com/webadderall/Recordly/releases/download/v${{ steps.version_check.outputs.new_version }}/Recordly-x64.dmg"
+          curl -f -L -o /tmp/recordly-x64.dmg "https://github.com/webadderallorg/Recordly/releases/download/v${{ steps.version_check.outputs.new_version }}/Recordly-x64.dmg"
           if [ ! -s /tmp/recordly-x64.dmg ] || [ $(stat -c%s /tmp/recordly-x64.dmg) -lt 100000 ]; then
             echo "x64 DMG file is missing or too small"
             exit 1
