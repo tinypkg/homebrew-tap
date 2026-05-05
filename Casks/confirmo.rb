@@ -1,14 +1,14 @@
 cask "confirmo" do
-  version "1.0.90"
+  version "1.0.92"
 
   on_arm do
-    sha256 "24934faa1c866c40f96c8e364a42f0920acb3c4e70e78915747c4c5cd5216a4a"
+    sha256 "83a1c47b43d365af83fbf97c8b2111ac7b9058f79c43e28872e56f112ec70a2d"
 
     url "https://updates.confirmo.love/confirmo-#{version}-arm64.dmg"
   end
 
   on_intel do
-    sha256 "743618f24df92246d45ec37dbdc89cecfb7184caaa0927f0a18abb0370555ac0"
+    sha256 "54b34987b552f157e5b4ee7bf10e71fa1b511f7e64bcb1b9742179097ac65bf1"
 
     url "https://updates.confirmo.love/confirmo-#{version}-x64.dmg"
   end
