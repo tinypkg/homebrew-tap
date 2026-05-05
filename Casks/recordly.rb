@@ -14,7 +14,7 @@ cask "recordly" do
 
   name "Recordly"
   desc "Create polished screen recordings for free"
-  homepage "https://github.com/webadderall/Recordly"
+  homepage "https://github.com/webadderallorg/Recordly"
 
   livecheck do
     url :url
