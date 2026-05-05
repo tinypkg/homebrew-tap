@@ -25,9 +25,9 @@ class CcSwitchCli < Formula
 
   def post_install
     # Remove quarantine attribute from the binary
-    chmod "+x", bin/"cc-switch-cli"
+    chmod "+x", bin/"cc-switch"
     system_command "/usr/bin/xattr",
-                   args: ["-cr", bin/"cc-switch-cli"],
+                   args: ["-cr", bin/"cc-switch"],
                    sudo: false
   end
 
@@ -36,7 +36,7 @@ class CcSwitchCli < Formula
       cc-switch-cli has been installed!
 
       To get started, run:
-        cc-switch-cli --help
+        cc-switch --help
 
       Learn more at: https://github.com/SaladDay/cc-switch-cli
     EOS
