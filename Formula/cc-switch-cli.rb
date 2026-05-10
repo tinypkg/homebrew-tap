@@ -1,21 +1,21 @@
 class CcSwitchCli < Formula
   desc "A cross-platform CLI All-in-One assistant tool for Claude Code, Codex & Gemini CLI"
   homepage "https://github.com/SaladDay/cc-switch-cli"
-  version "5.4.0"
+  version "5.5.0"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/SaladDay/cc-switch-cli/releases/download/v5.4.0/cc-switch-cli-darwin-arm64.tar.gz"
-      sha256 "40087292b845797e54a58423f898422b804f8fb75c77233e44091c39476c7561"
+      url "https://github.com/SaladDay/cc-switch-cli/releases/download/v5.5.0/cc-switch-cli-darwin-arm64.tar.gz"
+      sha256 "4c48024c8f9c2f818959db2a65d4617ad16c746341683ae28bea6f32a94ec0b4"
 
       def install
         bin.install "cc-switch"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/SaladDay/cc-switch-cli/releases/download/v5.4.0/cc-switch-cli-darwin-x64.tar.gz"
-      sha256 "31ae4f2b65127ad43f367790848e63373c0aaad58b9335d1b56f63945942fc3b"
+      url "https://github.com/SaladDay/cc-switch-cli/releases/download/v5.5.0/cc-switch-cli-darwin-x64.tar.gz"
+      sha256 "a20fa22dab178f4b8b6175b8065e167d231b04c5e369ff8501295c00f9a1bf79"
 
       def install
         bin.install "cc-switch"
