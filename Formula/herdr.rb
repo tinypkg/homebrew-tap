@@ -1,13 +1,13 @@
 class Herdr < Formula
   desc "Supervise multiple coding agents in one terminal"
   homepage "https://github.com/ogulcancelik/herdr"
-  version "0.5.5"
+  version "0.5.6"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/ogulcancelik/herdr/releases/download/v#{version}/herdr-macos-aarch64"
-      sha256 "ec02eedb259324c5062243447e3892a5606410bdd01a89d9e6d13e1d0ec8ce9a"
+      sha256 "3cddcebc6ecff65fd0d199a40586140e541223cbf98aedb8159fc37728c28809"
 
       def install
         bin.install "herdr-macos-aarch64" => "herdr"
@@ -15,7 +15,7 @@ class Herdr < Formula
     end
     if Hardware::CPU.intel?
       url "https://github.com/ogulcancelik/herdr/releases/download/v#{version}/herdr-macos-x86_64"
-      sha256 "5b0dce148d1314b428d6a37a809abc13792e5f8e2aa658cedc53523395d10a62"
+      sha256 "9a99bbe00b24b3a7cb2fa8df3171785a1d1285115105a81268e01a8a0fafd7b5"
 
       def install
         bin.install "herdr-macos-x86_64" => "herdr"
