@@ -1,13 +1,13 @@
 cask "helmor" do
-  version "0.20.5"
+  version "0.21.0"
 
   on_arm do
-    sha256 "4ecfd7a7a0119e045a2d906134ae8c4f18165788bfbacb1f6ac025820afb7f41"
+    sha256 "f9b5eee40cfb3afb3bd9d6d51012405cc01e4f368cd60d307e2082abd7e3ae1b"
     url "https://github.com/dohooo/helmor/releases/download/v#{version}/Helmor_#{version}_aarch64.dmg"
   end
 
   on_intel do
-    sha256 "cc6a509269101b5c582920c63019a1602ce8b0fa25d863d19752c57ca0f893a2"
+    sha256 "58af208dbd7dd82e3e6f36a0f80f01cd587647dd2d798553c90025207b22115c"
     url "https://github.com/dohooo/helmor/releases/download/v#{version}/Helmor_#{version}_x64.dmg"
   end
 
