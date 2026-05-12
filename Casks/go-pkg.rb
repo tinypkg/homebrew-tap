@@ -4,9 +4,9 @@
 cask "go-pkg" do
   arch arm: "arm64", intel: "amd64"
 
-  version "1.26.2"
-  sha256 arm:   "5daa0b7ba59f703c5b6be2bd48437062224fd9244160e8e73a1c9f7eb8a11784",
-         intel: "5eab5ad8943e7666554fddd72ecbcbe64cf8f04197d6e06486fbb395b779fd8d"
+  version "1.26.3"
+  sha256 arm:   "46d473e2940558f1b3f27ea01307655b1727e4a8c996de414e18e50b16007e4c",
+         intel: "60fc71e2d0b4a176ef36b2b0501ce1f681aaf6d59d389306c92a532db004ac84"
 
   # Official download URL from go.dev
   url "https://go.dev/dl/go#{version}.darwin-#{arch}.pkg"
