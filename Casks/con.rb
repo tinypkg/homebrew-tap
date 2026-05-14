@@ -1,13 +1,13 @@
 cask "con" do
-  version "0.1.0-beta.74"
+  version "0.1.0-beta.76"
 
   on_arm do
-    sha256 "d44d7d18671e4f34090d6833d51b3ab02806385db7b77c9982c95aa9014d65f3"
+    sha256 "1b793485a430c3964e5ab7309a78c0a858382a890831033fcc10a5c73293702f"
     url "https://github.com/nowledge-co/con-terminal/releases/download/v#{version}/con-${ARM64_PREFIX}-#{version}-macos-arm64.dmg"
   end
 
   on_intel do
-    sha256 "533a6b2e9893eb0f43c163a6f6597e6011bae158e91e3b3f89fde2746bad0b2a"
+    sha256 "417faad50fd2907b3b133964688163b1a997f7d70df92562614e9e3af61185f4"
     url "https://github.com/nowledge-co/con-terminal/releases/download/v#{version}/con-${ARM64_PREFIX}-#{version}-macos-x86_64.dmg"
   end
 
