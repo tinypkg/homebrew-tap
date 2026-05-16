@@ -49,7 +49,7 @@ brew install tinypkg/tap/rime-wanxiang-updater      # 万象拼音输入法更�
 brew install tinypkg/tap/snout                       # Rime 输入法初始化与更新工具
 brew install tinypkg/tap/mise-bin                   # Mise - 多语言版本管理工具
 brew install tinypkg/tap/cc-switch-cli              # CC Switch CLI - Claude Code/Codex/Gemini CLI 助手工具
-brew install tinypkg/tap/herdr                      # Herdr - Supervise multiple coding agents in one terminal
+brew install tinypkg/tap/herdr                      # Herdr - agent multiplexer that lives in your terminal
 ```
 
 ### 📋 传统方式
@@ -111,7 +111,7 @@ brew install mise-bin
 # CC Switch CLI - Claude Code/Codex/Gemini CLI 助手工具
 brew install cc-switch-cli
 
-# Herdr - Supervise multiple coding agents in one terminal
+# Herdr - agent multiplexer that lives in your terminal
 brew install herdr
 ```
 
@@ -174,7 +174,7 @@ brew uninstall rime-wanxiang-updater
 | [snout](Formula/snout.rb) | Rime 输入法初始化与更新工具 (万象/雾凇/白霜/薄荷) | `brew install tinypkg/tap/snout` | `0.1.1` | 🍎 Intel & ARM |
 | [mise-bin](Formula/mise-bin.rb) | 多语言版本管理工具 (polyglot version manager) | `brew install tinypkg/tap/mise-bin` | `2024.1.0` | 🍎 Intel & ARM |
 | [cc-switch-cli](Formula/cc-switch-cli.rb) | Claude Code/Codex/Gemini CLI 助手工具 | `brew install tinypkg/tap/cc-switch-cli` | `5.2.0` | 🍎 Intel & ARM |
-| [herdr](Formula/herdr.rb) | Supervise multiple coding agents in one terminal | `brew install tinypkg/tap/herdr` | `0.4.10` | 🍎 Intel & ARM |
+| [herdr](Formula/herdr.rb) | agent multiplexer that lives in your terminal | `brew install tinypkg/tap/herdr` | `0.5.9` | 🍎 Intel & ARM |
 
 ## ✨ 特性
 
@@ -419,7 +419,7 @@ brew uninstall rime-wanxiang-updater
 - **使用方法**:
   ```bash
   # 手动指定版本
-  gh workflow run update-herdr-version.yml -f version=0.4.11
+  gh workflow run update-herdr-version.yml -f version=0.5.10
 
   # 自动检测最新版本
   gh workflow run update-herdr-version.yml

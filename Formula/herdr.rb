@@ -1,5 +1,5 @@
 class Herdr < Formula
-  desc "Supervise multiple coding agents in one terminal"
+  desc "agent multiplexer that lives in your terminal"
   homepage "https://github.com/ogulcancelik/herdr"
   version "0.5.9"
   license "MIT"
