@@ -25,6 +25,7 @@ brew install --cask tinypkg/tap/cmux                # cmux - Lightweight macOS t
 brew install --cask tinypkg/tap/helmor              # Helmor - Open-source local workbench for multi-agent software development
 brew install --cask tinypkg/tap/con                # Con - The Native Terminal Emulator with a builtin AI Harness
 brew install --cask tinypkg/tap/snapzy             # Snapzy - Native macOS screenshots, recording, annotation, and editing
+brew install --cask tinypkg/tap/cumora             # Cumora - A workspace where AI teammates live, not visit
 
 ## 输入法
 brew install --cask tinypkg/tap/fcitx5-pinyin       # Fcitx5 输入法 - 拼音版
@@ -76,6 +77,7 @@ brew install --cask cmux               # Lightweight macOS terminal for AI codin
 brew install --cask helmor             # Open-source local workbench for multi-agent software development
 brew install --cask con                # The Native Terminal Emulator with a builtin AI Harness
 brew install --cask snapzy             # Native macOS screenshots, recording, annotation, and editing
+brew install --cask cumora             # A workspace where AI teammates live, not visit
 
 # 输入法
 brew install --cask fcitx5-pinyin      # Fcitx5 输入法 - 拼音版
@@ -141,6 +143,7 @@ brew uninstall rime-wanxiang-updater
 | [helmor](Casks/helmor.rb) | Open-source local workbench for multi-agent software development | `brew install --cask tinypkg/tap/helmor` | `0.12.0` | 🍎 Intel & ARM |
 | [con](Casks/con.rb) | The Native Terminal Emulator with a builtin AI Harness | `brew install --cask tinypkg/tap/con` | `0.1.0-beta.60` | 🍎 Intel & ARM |
 | [snapzy](Casks/snapzy.rb) | Native macOS screenshots, recording, annotation, and editing | `brew install --cask tinypkg/tap/snapzy` | `1.12.7` | 🍎 macOS Ventura+ |
+| [cumora](Casks/cumora.rb) | A workspace where AI teammates live, not visit | `brew install --cask tinypkg/tap/cumora` | `0.1.23` | 🍎 Intel & ARM |
 
 ### 🔤 输入法
 
@@ -458,6 +461,19 @@ brew uninstall rime-wanxiang-updater
 - **使用方法**:
   ```bash
   gh workflow run update-dbx-version.yml -f version=0.3.3
+  ```
+
+### Cumora 自动更新
+- **触发方式**: 每12小时定时检查 + 手动触发（可自动检测最新版本）
+- **工作流**: `.github/workflows/update-cumora-version.yml`
+- **功能**: 自动从 updates.cumora.ai 检测最新版本，下载 macOS arm64/x64 DMG，计算 SHA256 校验和
+- **使用方法**:
+  ```bash
+  # 手动指定版本
+  gh workflow run update-cumora-version.yml -f version=0.1.23
+
+  # 自动检测最新版本
+  gh workflow run update-cumora-version.yml
   ```
 
 ### Snapzy 自动更新

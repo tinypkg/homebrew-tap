@@ -1,0 +1,127 @@
+name: Update Cumora Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g., 0.1.23). Leave empty to auto-detect latest version."
+        required: false
+        type: string
+  schedule:
+    - cron: "0 */12 * * *"
+
+jobs:
+  update-cask:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Get latest version and check for updates
+        id: version_check
+        run: |
+          CURRENT_VERSION=$(grep 'version "' Casks/cumora.rb | sed 's/.*version "\(.*\)".*/\1/')
+          echo "Current version: $CURRENT_VERSION"
+
+          if [ -n "${{ inputs.version }}" ]; then
+            NEW_VERSION="${{ inputs.version }}"
+            echo "Using manually specified version: $NEW_VERSION"
+          else
+            NEW_VERSION=$(curl -f -sL https://updates.cumora.ai/latest.yml | grep '^version:' | awk '{print $2}')
+            if [ -z "$NEW_VERSION" ]; then
+              echo "Failed to parse version from latest.yml"
+              exit 1
+            fi
+            echo "Latest available version: $NEW_VERSION"
+          fi
+
+          if [ "$CURRENT_VERSION" = "$NEW_VERSION" ]; then
+            echo "No update needed. Current version ($CURRENT_VERSION) is up to date."
+            echo "should_update=false" >> $GITHUB_OUTPUT
+          else
+            echo "Update available: $CURRENT_VERSION -> $NEW_VERSION"
+            echo "should_update=true" >> $GITHUB_OUTPUT
+          fi
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Download DMG files
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          # Download arm64 DMG
+          curl -f -L -o /tmp/cumora-arm64.dmg "https://updates.cumora.ai/Cumora-${{ steps.version_check.outputs.new_version }}-arm64.dmg"
+          if [ ! -s /tmp/cumora-arm64.dmg ] || [ $(stat -c%s /tmp/cumora-arm64.dmg) -lt 100000 ]; then
+            echo "arm64 DMG file is missing or too small"
+            exit 1
+          fi
+
+          # Download x64 DMG
+          curl -f -L -o /tmp/cumora-x64.dmg "https://updates.cumora.ai/Cumora-${{ steps.version_check.outputs.new_version }}.dmg"
+          if [ ! -s /tmp/cumora-x64.dmg ] || [ $(stat -c%s /tmp/cumora-x64.dmg) -lt 100000 ]; then
+            echo "x64 DMG file is missing or too small"
+            exit 1
+          fi
+
+      - name: Calculate checksums
+        if: steps.version_check.outputs.should_update == 'true'
+        id: checksums
+        run: |
+          ARM64_SHA256=$(sha256sum /tmp/cumora-arm64.dmg | awk '{print $1}')
+          X64_SHA256=$(sha256sum /tmp/cumora-x64.dmg | awk '{print $1}')
+          echo "arm64_sha256=$ARM64_SHA256" >> $GITHUB_OUTPUT
+          echo "x64_sha256=$X64_SHA256" >> $GITHUB_OUTPUT
+          echo "arm64 SHA256: $ARM64_SHA256"
+          echo "x64 SHA256: $X64_SHA256"
+
+      - name: Update cask file
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          # Update version
+          sed -i "s/version \".*\"/version \"${{ steps.version_check.outputs.new_version }}\"/" Casks/cumora.rb
+
+          # Update sha256 in on_arm block
+          sed -i '/on_arm do/,/end/{s/sha256 ".*"/sha256 "${{ steps.checksums.outputs.arm64_sha256 }}"/}' Casks/cumora.rb
+
+          # Update sha256 in on_intel block
+          sed -i '/on_intel do/,/end/{s/sha256 ".*"/sha256 "${{ steps.checksums.outputs.x64_sha256 }}"/}' Casks/cumora.rb
+
+      - name: Show changes
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          git diff Casks/cumora.rb
+
+      - name: Commit and push changes
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add Casks/cumora.rb
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "chore: update Cumora to version ${{ steps.version_check.outputs.new_version }}"
+          git push
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Current Version**: ${{ steps.version_check.outputs.current_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Latest Version**: ${{ steps.version_check.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Update Required**: ${{ steps.version_check.outputs.should_update }}" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ steps.version_check.outputs.should_update }}" = "true" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Successfully updated to version ${{ steps.version_check.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "No update needed. Already on the latest version." >> $GITHUB_STEP_SUMMARY
+          fi
