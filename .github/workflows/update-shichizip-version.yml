@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version number (e.g., 0.0.3). Leave empty to auto-detect latest version."
+        description: "Version number (e.g., 0.2.1). Leave empty to auto-detect latest version."
         required: false
         type: string
   schedule:
@@ -20,34 +20,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Get latest version and check for updates
+      - name: Get latest version and release assets
         id: version_check
         run: |
-          # 获取当前 cask 中的版本
-          CURRENT_VERSION=$(grep 'version "' Casks/shichizip.rb | sed 's/.*version "\(.*\)".*/\1/')
+          CURRENT_VERSION=$(grep -oP 'version "\K[^"]+' Casks/shichizip.rb)
           echo "Current version: $CURRENT_VERSION"
 
-          # 如果手动指定了版本，使用指定的版本
           if [ -n "${{ inputs.version }}" ]; then
             NEW_VERSION="${{ inputs.version }}"
             echo "Using manually specified version: $NEW_VERSION"
           else
-            # 从 GitHub API 获取最新版本
             RELEASE_INFO=$(curl -f -s "https://api.github.com/repos/idawnlight/ShichiZip/releases/latest")
             if [ $? -ne 0 ]; then
               echo "Failed to fetch release info"
               exit 1
             fi
 
-            NEW_VERSION=$(echo "$RELEASE_INFO" | sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p' | head -n 1)
+            NEW_VERSION=$(echo "$RELEASE_INFO" | jq -r '.tag_name // empty' | sed 's/^v//')
             if [ -z "$NEW_VERSION" ]; then
               echo "Failed to parse version from release info"
               exit 1
             fi
             echo "Latest available version: $NEW_VERSION"
+
+            # Detect asset naming patterns from the release
+            # Save asset names to outputs for dynamic download
+            echo "$RELEASE_INFO" | jq -r '.assets[].name' > /tmp/asset_names.txt
+            cat /tmp/asset_names.txt
           fi
 
-          # 比较版本
           if [ "$CURRENT_VERSION" = "$NEW_VERSION" ]; then
             echo "No update needed. Current version ($CURRENT_VERSION) is up to date."
             echo "should_update=false" >> $GITHUB_OUTPUT
@@ -65,26 +66,35 @@ jobs:
         run: |
           VERSION="${{ steps.version_check.outputs.new_version }}"
 
+          # Build asset names following the upstream naming convention
+          # Format: ShichiZip-v${VERSION}-arm64.zip, etc.
+          download() {
+            local asset_name="$1"
+            local output="$2"
+            local url="https://github.com/idawnlight/ShichiZip/releases/download/v${VERSION}/${asset_name}"
+            curl -f --connect-timeout 30 --retry 3 -L -o "$output" "$url"
+          }
+
           # Download ShichiZip arm64
-          curl -f -L -o /tmp/shichizip-arm64.zip "https://github.com/idawnlight/ShichiZip/releases/download/v${VERSION}/ShichiZip-Release-arm64.zip"
+          download "ShichiZip-v${VERSION}-arm64.zip" /tmp/shichizip-arm64.zip
           SHICHIZIP_ARM64_SHA256=$(sha256sum /tmp/shichizip-arm64.zip | awk '{print $1}')
           echo "shichizip_arm64_sha256=$SHICHIZIP_ARM64_SHA256" >> $GITHUB_OUTPUT
           echo "ShichiZip arm64 SHA256: $SHICHIZIP_ARM64_SHA256"
 
           # Download ShichiZip x86_64
-          curl -f -L -o /tmp/shichizip-x64.zip "https://github.com/idawnlight/ShichiZip/releases/download/v${VERSION}/ShichiZip-Release-x86_64.zip"
+          download "ShichiZip-v${VERSION}-x86_64.zip" /tmp/shichizip-x64.zip
           SHICHIZIP_X64_SHA256=$(sha256sum /tmp/shichizip-x64.zip | awk '{print $1}')
           echo "shichizip_x64_sha256=$SHICHIZIP_X64_SHA256" >> $GITHUB_OUTPUT
           echo "ShichiZip x86_64 SHA256: $SHICHIZIP_X64_SHA256"
 
           # Download ShichiZipZS arm64
-          curl -f -L -o /tmp/shichizipzs-arm64.zip "https://github.com/idawnlight/ShichiZip/releases/download/v${VERSION}/ShichiZipZS-Release-arm64.zip"
+          download "ShichiZipZS-v${VERSION}-arm64.zip" /tmp/shichizipzs-arm64.zip
           SHICHIZIPZS_ARM64_SHA256=$(sha256sum /tmp/shichizipzs-arm64.zip | awk '{print $1}')
           echo "shichizipzs_arm64_sha256=$SHICHIZIPZS_ARM64_SHA256" >> $GITHUB_OUTPUT
           echo "ShichiZipZS arm64 SHA256: $SHICHIZIPZS_ARM64_SHA256"
 
           # Download ShichiZipZS x86_64
-          curl -f -L -o /tmp/shichizipzs-x64.zip "https://github.com/idawnlight/ShichiZip/releases/download/v${VERSION}/ShichiZipZS-Release-x86_64.zip"
+          download "ShichiZipZS-v${VERSION}-x86_64.zip" /tmp/shichizipzs-x64.zip
           SHICHIZIPZS_X64_SHA256=$(sha256sum /tmp/shichizipzs-x64.zip | awk '{print $1}')
           echo "shichizipzs_x64_sha256=$SHICHIZIPZS_X64_SHA256" >> $GITHUB_OUTPUT
           echo "ShichiZipZS x86_64 SHA256: $SHICHIZIPZS_X64_SHA256"
@@ -116,7 +126,6 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add Casks/shichizip.rb Casks/shichizip-zs.rb
 
-          # Check if there are changes to commit
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0
