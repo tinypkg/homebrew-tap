@@ -1,11 +1,11 @@
 cask "buffer" do
-  version "1.8.0"
+  version "2.0.0"
   on_arm do
-    sha256 "a62427b8490a39d4066b28b29d802531bb2352ee0ddc1b5d15dc86560392e1df"
+    sha256 "6ad315be53106fcec8757b26aa68fe2904d9b7d6afab2a4a43d1442e7c3220d2"
     url "https://github.com/samirpatil2000/Buffer/releases/download/buffer-v#{version}/Buffer_Silicon.dmg"
   end
   on_intel do
-    sha256 "ccff08abc26067a175560360f8bad27688b3ab52f11e4dde8a09eff52bf5bb1b"
+    sha256 "74705e856bc684fd9114a73b0bb4f34622088d97c312b8c9de6e7f8f424ba112"
     url "https://github.com/samirpatil2000/Buffer/releases/download/buffer-v#{version}/Buffer_Intel.dmg"
   end
 
