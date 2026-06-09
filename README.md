@@ -26,6 +26,7 @@ brew install --cask tinypkg/tap/helmor              # Helmor - Open-source local
 brew install --cask tinypkg/tap/con                # Con - The Native Terminal Emulator with a builtin AI Harness
 brew install --cask tinypkg/tap/snapzy             # Snapzy - Native macOS screenshots, recording, annotation, and editing
 brew install --cask tinypkg/tap/cumora             # Cumora - A workspace where AI teammates live, not visit
+brew install --cask tinypkg/tap/horseMD            # HorseMD - Free Typora alternative with tabs and file tree
 
 ## 输入法
 brew install --cask tinypkg/tap/fcitx5-pinyin       # Fcitx5 输入法 - 拼音版
@@ -79,6 +80,7 @@ brew install --cask helmor             # Open-source local workbench for multi-a
 brew install --cask con                # The Native Terminal Emulator with a builtin AI Harness
 brew install --cask snapzy             # Native macOS screenshots, recording, annotation, and editing
 brew install --cask cumora             # A workspace where AI teammates live, not visit
+brew install --cask horseMD            # Free Typora alternative with tabs and file tree
 
 # 输入法
 brew install --cask fcitx5-pinyin      # Fcitx5 输入法 - 拼音版
@@ -146,6 +148,7 @@ brew uninstall rime-wanxiang-updater
 | [con](Casks/con.rb) | The Native Terminal Emulator with a builtin AI Harness | `brew install --cask tinypkg/tap/con` | `0.1.0-beta.60` | 🍎 Intel & ARM |
 | [snapzy](Casks/snapzy.rb) | Native macOS screenshots, recording, annotation, and editing | `brew install --cask tinypkg/tap/snapzy` | `1.12.7` | 🍎 macOS Ventura+ |
 | [cumora](Casks/cumora.rb) | A workspace where AI teammates live, not visit | `brew install --cask tinypkg/tap/cumora` | `0.1.23` | 🍎 Intel & ARM |
+| [horseMD](Casks/horseMD.rb) | Free Typora alternative with tabs, file tree and WYSIWYG editor | `brew install --cask tinypkg/tap/horseMD` | `0.1.5` | 🍎 ARM only |
 
 ### 🔤 输入法
 
@@ -503,6 +506,19 @@ brew uninstall rime-wanxiang-updater
 
   # 自动检测最新版本
   gh workflow run update-time-machine-trimmer-version.yml
+  ```
+
+### HorseMD 自动更新
+- **触发方式**: 每周一 10:00 UTC 定时检查 + 手动触发（可自动检测最新版本）
+- **工作流**: `.github/workflows/update-horseMD-version.yml`
+- **功能**: 自动从 GitHub Releases 检测最新版本，下载 macOS ARM64 DMG，计算 SHA256 校验和
+- **使用方法**:
+  ```bash
+  # 手动指定版本
+  gh workflow run update-horseMD-version.yml -f version=0.1.5
+
+  # 自动检测最新版本
+  gh workflow run update-horseMD-version.yml
   ```
 
 ## 🛠️ 开发指南
