@@ -44,6 +44,7 @@ brew install --cask tinypkg/tap/shichizip           # ShichiZip - 7-Zip derivati
 brew install --cask tinypkg/tap/shichizip-zs        # ShichiZip ZS - 7-Zip with Zstandard compression
 brew install --cask tinypkg/tap/puremac             # PureMac - macOS app manager and system cleaner
 brew install --cask tinypkg/tap/dbx                 # dbx - Dropbox client for macOS
+brew install --cask tinypkg/tap/time-machine-trimmer # TimeMachineTrimmer - Trim old Time Machine backups, reclaim disk space
 
 ## 命令行工具
 brew install tinypkg/tap/rime-wanxiang-updater      # 万象拼音输入法更新工具
@@ -96,6 +97,7 @@ brew install --cask winmux             # macOS 窗口管理器
   brew install --cask shichizip-zs       # 7-Zip with Zstandard compression
   brew install --cask puremac            # macOS app manager and system cleaner
   brew install --cask dbx                # Open-source database management tool
+  brew install --cask time-machine-trimmer # Trim old Time Machine backups, reclaim disk space
 ```
 
 
@@ -168,6 +170,7 @@ brew uninstall rime-wanxiang-updater
 | [shichizip-zs](Casks/shichizip-zs.rb) | 7-Zip with Zstandard compression | `brew install --cask tinypkg/tap/shichizip-zs` | `0.0.3` | 🍎 Intel & ARM |
 | [puremac](Casks/puremac.rb) | macOS app manager and system cleaner | `brew install --cask tinypkg/tap/puremac` | `2.0.0` | 🍎 Intel & ARM |
 | [dbx](Casks/dbx.rb) | Open-source database management tool | `brew install --cask tinypkg/tap/dbx` | `0.3.3` | 🍎 Intel & ARM |
+| [time-machine-trimmer](Casks/time-machine-trimmer.rb) | Trim old Time Machine backups, reclaim disk space | `brew install --cask tinypkg/tap/time-machine-trimmer` | `1.0.3` | 🍎 Intel & ARM |
 
 ### ⚙️ 命令行工具 (Formulas)
 
@@ -487,6 +490,19 @@ brew uninstall rime-wanxiang-updater
 
   # 自动检测最新版本
   gh workflow run update-snapzy-version.yml
+  ```
+
+### TimeMachineTrimmer 自动更新
+- **触发方式**: 每周一 10:00 UTC 定时检查 + 手动触发（可自动检测最新版本）
+- **工作流**: `.github/workflows/update-time-machine-trimmer-version.yml`
+- **功能**: 自动从 GitHub Releases 检测最新版本，下载 macOS DMG，计算 SHA256 校验和
+- **使用方法**:
+  ```bash
+  # 手动指定版本
+  gh workflow run update-time-machine-trimmer-version.yml -f version=1.0.3
+
+  # 自动检测最新版本
+  gh workflow run update-time-machine-trimmer-version.yml
   ```
 
 ## 🛠️ 开发指南
