@@ -1,0 +1,57 @@
+name: Update Kooky Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g., 0.26.8). Leave empty to auto-detect."
+        required: false
+        type: string
+  schedule:
+    - cron: "0 */12 * * *"
+
+jobs:
+  update-cask:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get latest version
+        id: version_check
+        run: |
+          CURRENT_VERSION=$(grep 'version "' Casks/kooky.rb | sed 's/.*version "\(.*\)".*/\1/')
+          if [ -n "${{ inputs.version }}" ]; then
+            NEW_VERSION="${{ inputs.version }}"
+          else
+            NEW_VERSION=$(curl -s https://api.github.com/repos/iAmCorey/kooky/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+          fi
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "should_update=$([[ "$CURRENT_VERSION" != "$NEW_VERSION" ]] && echo true || echo false)" >> $GITHUB_OUTPUT
+
+      - name: Download file and calculate checksum
+        if: steps.version_check.outputs.should_update == 'true'
+        id: checksums
+        run: |
+          curl -f -L -o /tmp/kooky.dmg "https://github.com/iAmCorey/kooky/releases/download/v${{ steps.version_check.outputs.new_version }}/Kooky-v${{ steps.version_check.outputs.new_version }}.dmg"
+          SHA256=$(sha256sum /tmp/kooky.dmg | awk '{print $1}')
+          echo "sha256=$SHA256" >> $GITHUB_OUTPUT
+
+      - name: Update cask file
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          sed -i "s/version \".*\"/version \"${{ steps.version_check.outputs.new_version }}\"/" Casks/kooky.rb
+          sed -i "s/sha256 \".*\"/sha256 \"${{ steps.checksums.outputs.sha256 }}\"/" Casks/kooky.rb
+
+      - name: Commit and push changes
+        if: steps.version_check.outputs.should_update == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/kooky.rb
+          git commit -m "chore: update Kooky to version ${{ steps.version_check.outputs.new_version }}"
+          git push
