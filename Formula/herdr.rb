@@ -1,13 +1,13 @@
 class Herdr < Formula
   desc "agent multiplexer that lives in your terminal"
   homepage "https://github.com/ogulcancelik/herdr"
-  version "0.7.0"
+  version "0.7.1"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/ogulcancelik/herdr/releases/download/v#{version}/herdr-macos-aarch64"
-      sha256 "0946c1c5de396d1404906c81c84a0cef47af5e15c9aac3c058c3936b833fe311"
+      sha256 "16f4653f0491ea1e7d2b46b5b02542f18e1b82e88daaf9e2900572e5bb634df8"
 
       def install
         bin.install "herdr-macos-aarch64" => "herdr"
@@ -15,7 +15,7 @@ class Herdr < Formula
     end
     if Hardware::CPU.intel?
       url "https://github.com/ogulcancelik/herdr/releases/download/v#{version}/herdr-macos-x86_64"
-      sha256 "6c61cdb67c79b8d0626e109b9d8d8635c66a80bfed21ac9fe6efdf1dd8d27c0f"
+      sha256 "5780fa07dbb9a78d79e52d20b86a61013f6cba02667f20b6cf89663015090846"
 
       def install
         bin.install "herdr-macos-x86_64" => "herdr"
