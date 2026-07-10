@@ -1,6 +1,6 @@
 cask "kooky" do
-  version "0.32.0"
-  sha256 "c7064909ccc3b0fb1cd63c05fb88f08e1823290f3fbd456dc3a9a4daf1990daf"
+  version "0.34.0"
+  sha256 "48ef45182507c21af2ee9b1c3f3bd4e8c8aa8926d9e5ff1c9134897798b3de02"
 
   url "https://github.com/iAmCorey/kooky/releases/download/v#{version}/Kooky-v#{version}.dmg"
   name "Kooky"
