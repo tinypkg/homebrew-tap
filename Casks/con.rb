@@ -20,7 +20,7 @@ cask "con" do
     strategy :github_latest
   end
 
-  depends_on macos: ">= :catalina"
+  depends_on macos: :catalina
 
   app "con Beta.app"
 

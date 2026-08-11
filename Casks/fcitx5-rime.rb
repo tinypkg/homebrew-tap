@@ -12,7 +12,7 @@ cask "fcitx5-rime" do
     strategy :github_latest
   end
 
-  depends_on macos: ">= :big_sur"
+  depends_on macos: :big_sur
 
   app "Fcitx5Installer.app"
 
