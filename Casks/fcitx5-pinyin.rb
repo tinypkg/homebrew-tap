@@ -1,6 +1,6 @@
 cask "fcitx5-pinyin" do
-  version "0.3.4"
-  sha256 "96de7503791578fe468f88a8ac6266ba320e35e9ee9ca04cbb55d218398ec4b0"
+  version "0.3.5"
+  sha256 "d3a219ae30bdecd65f23d7d7f25b08e22d85be37643f803b9d48f739e2c35ce2"
 
   url "https://github.com/fcitx-contrib/fcitx5-macos-installer/releases/download/#{version}/Fcitx5-Pinyin.zip"
   name "Fcitx5 Pinyin"

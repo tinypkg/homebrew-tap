@@ -1,6 +1,6 @@
 cask "fcitx5" do
-  version "0.3.4"
-  sha256 "4533c7657bdddca48baf0f19ed20499277043b8fca1d822bc6ac984c142b0adf"
+  version "0.3.5"
+  sha256 "11b066333d968da9f9a15231c0ba1ed18e55b7b96c3c658860dd7db6bad1f29a"
 
   url "https://github.com/fcitx-contrib/fcitx5-macos-installer/releases/download/#{version}/Fcitx5Installer.zip"
   name "Fcitx5"
