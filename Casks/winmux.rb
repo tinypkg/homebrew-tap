@@ -1,6 +1,6 @@
 cask "winmux" do
-  version "0.4.0"
-  sha256 "5d7d3890f3ca6410a841a3b522fa92f919aea94c1218c40e62036a7078dd02fa"
+  version "0.5.1"
+  sha256 "051cd03301fcf1a1ac43f1ec01a906bae51330bf3e784f8c231869e5aa95dfcb"
 
   url "https://github.com/ZimengXiong/winmux/releases/download/v#{version}/WinMux-#{version}.zip"
   name "WinMux"
