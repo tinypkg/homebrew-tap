@@ -1,11 +1,11 @@
 cask "cumora" do
-  version "0.13.0"
+  version "0.13.2"
   on_arm do
-    sha256 "8e191dd3d413605d08305ace6f1808672e70a49970825a4fd55fe45a6356983b"
+    sha256 "8f9798ac2eb19f09f6e71d9d20b2f881054629e465cbbdf8c455b58e8cc4c68e"
     url "https://updates.cumora.ai/Cumora-#{version}-arm64.dmg"
   end
   on_intel do
-    sha256 "8eedb50fae66a0118cce6d348fe720ccb6119880165dfd2efee08425960f817f"
+    sha256 "287cb7c9232fe283e2f6c19bfa74e745d399087e6df4b1b18c797d428332118e"
     url "https://updates.cumora.ai/Cumora-#{version}.dmg"
   end
 
