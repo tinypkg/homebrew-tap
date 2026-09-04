@@ -1,6 +1,6 @@
 cask "fcitx5-rime" do
-  version "0.3.5"
-  sha256 "60d0a510a8a9b421dcac2826c0aa1a364db53a0399e7a4591d3c371e5f8a99ee"
+  version "0.3.7"
+  sha256 "61a9f4b334edfde15515bbef3b4e7c0965cb340e8f10906d159e2ccd699426ad"
 
   url "https://github.com/fcitx-contrib/fcitx5-macos-installer/releases/download/#{version}/Fcitx5-Rime.zip"
   name "Fcitx5 Rime"
