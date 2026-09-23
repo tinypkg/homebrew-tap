@@ -1,13 +1,13 @@
 cask "lzc-client-desktop" do
-  version "2.0.25"
+  version "2.0.26"
 
   on_intel do
-    sha256 "b0d915f3cfad2cae9b72c0dea6e2c20e34a2c20cfbd9a9b041d9d624725dd6de"
+    sha256 "3c3695cea3c27d91d5e39ba22da76700539bc59baf4e48df25d8910e3b911c78"
     url "https://dl.lazycat.cloud/client/desktop/stable/lzc-client-desktop_v#{version}_x64.dmg"
   end
 
   on_arm do
-    sha256 "2b975b903b9137e91bade6e44d62713ad206f17057c97ff08899494a5b15ad73"
+    sha256 "17b0777838dcce53acd0b8eb8d55b7f893f20d4a7b7a7f6044e9a366cb01ddb7"
     url "https://dl.lazycat.cloud/client/desktop/stable/lzc-client-desktop_v#{version}_arm64.dmg"
   end
 
