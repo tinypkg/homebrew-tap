@@ -1,6 +1,6 @@
 cask "horseMD" do
-  version "0.13.224"
-  sha256 "31ff392bb3f88e9b1ccdff6773dcf55379496047cbace1d3a6deb8b22139fcd8"
+  version "0.13.246"
+  sha256 "21e9e5d6c4b03c1f89146a910fa3a0f9d0687321532b30db53fb78c75a59a24a"
 
   url "https://github.com/BND-1/horseMD/releases/download/v#{version}/HorseMD-#{version}-arm64.dmg"
   name "HorseMD"
