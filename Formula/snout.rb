@@ -1,24 +1,24 @@
 class Snout < Formula
   desc "Rime input method initialization and update tool - supports Wanxiang/Wusong/Baishuang/Bohe schemes"
   homepage "https://github.com/ca-x/snout"
-  version "0.5.4"
+  version "0.5.5"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/ca-x/snout/releases/download/v0.5.4/snout-v0.5.4-macos-aarch64"
-      sha256 "2771ee3727d94fb7240d71e5f473a4cb4e5395173bb20a3c2e84b65ba1bfd4fe"
+      url "https://github.com/ca-x/snout/releases/download/v0.5.5/snout-v0.5.5-macos-aarch64"
+      sha256 "4716c35ece34c4411486a18ebb774b266049a10e34e1dbb0f160a193f3f59a88"
 
       def install
-        bin.install "snout-v0.5.4-macos-aarch64" => "snout"
+        bin.install "snout-v0.5.5-macos-aarch64" => "snout"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/ca-x/snout/releases/download/v0.5.4/snout-v0.5.4-macos-x86_64"
-      sha256 "1bbbdee58de888c5e6393e7f43b74f3610e155cc9b5232a74e1240b92494bb2e"
+      url "https://github.com/ca-x/snout/releases/download/v0.5.5/snout-v0.5.5-macos-x86_64"
+      sha256 "97e3b99933d56269e94f06f2faa65ec7a32dac1c0b404e2be07b2cf54b8ca427"
 
       def install
-        bin.install "snout-v0.5.4-macos-x86_64" => "snout"
+        bin.install "snout-v0.5.5-macos-x86_64" => "snout"
       end
     end
   end
