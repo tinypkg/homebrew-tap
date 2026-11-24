@@ -1,13 +1,13 @@
 cask "shichizip" do
-  version "0.3.4"
+  version "0.4.0"
 
   on_arm do
-    sha256 "0b05fc523451b77acd76890f64908d3298d1e59d7ec76ef03c4e41d9b0153e06"
+    sha256 "b71a7ee226c338262ba84073e20d2483c94127cb07c0c131c1846c8d36edeeaf"
     url "https://github.com/idawnlight/ShichiZip/releases/download/v#{version}/ShichiZip-v#{version}-arm64.zip"
   end
 
   on_intel do
-    sha256 "2b97a4a779ee6e417b71361d5b27e53124f89637bc073701dbd837fd1596dead"
+    sha256 "9d2ca7aba0c42ee9a1a34f9d131edc6ebb2fa008622764f9033e5a95566d01f2"
     url "https://github.com/idawnlight/ShichiZip/releases/download/v#{version}/ShichiZip-v#{version}-x86_64.zip"
   end
 
